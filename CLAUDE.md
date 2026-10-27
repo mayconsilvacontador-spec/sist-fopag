@@ -224,6 +224,13 @@ Documentação de referência: `README.md` (instalação), `docs/ARQUITETURA.md`
   recolhido), grupo "Principal" (Painel, Alertas, Calendário), cor principal vermelho-vinho (tokens em globals.css),
   barra superior com voltar/avançar, busca central arredondada, ano, avisos e usuário; botão de recolher o menu na barra
   das abas; ponto laranja por pendência (`alerts/summary` → `por_grupo`).
+  Menu (out/2026) enxuto: `MenuLeaf.section` (título de seção no grupo: Rotina do mês, Tabelas...) e
+  `MenuLeaf.hidden` (telas repetidas fora do menu, mas na pesquisa global e nos títulos das abas). Uma tela por
+  tarefa: Folha mensal faz o ciclo inteiro (Cálculo/Conferência/Fechamento/Reabertura/Painel/Arquivo bancário/
+  Relatórios ocultos); eSocial › Eventos gera, filtra (tipo/situação), exporta e importa retorno (S-xxxx/Retornos/
+  Rejeições/Pendências ocultos); Concessão › "Suspender, cessar ou reverter" (`/concessao/beneficios`,
+  `BenefitsScreen area="concessao"`) substitui Suspensão/Cessação/Reversão; Auditoria = um item (filtros na tela).
+  Guia "Como fazer (passo a passo)" em `/guia` (rotinas com links por permissão).
 - Frontend: abas de telas abertas (estilo navegador) em `components/layout/page-tabs.tsx` (guardadas no
   localStorage por usuário; o título vem do `PageHeader`; trocar de aba remonta a tela). Cadastros simples usam `components/shared/registry-page.tsx` (lista + `FormDialog`); códigos das tabelas
   em `frontend/src/lib/options.ts` (espelham o backend).
@@ -241,7 +248,7 @@ Documentação de referência: `README.md` (instalação), `docs/ARQUITETURA.md`
 - **O backend roda dentro do Docker** (`backend/Dockerfile`, código montado em `/app`, recarrega sozinho).
   Comandos Django: `docker exec sist-backend python manage.py <comando>` (interativo: `docker exec -it ...`).
   Após mudar `requirements*.txt`: `docker compose up -d --build backend`.
-- O venv `backend/.venv` (Python 3.13) existe mas **não conecta ao banco** no Windows (ver Smart App Control).
+- Não há venv local: `backend/.venv` foi apagado (não conectava ao banco no Windows — Smart App Control). Use o Docker.
 - O DNS interno do Docker Desktop falha nesta máquina: postgres e redis têm IPs fixos (172.28.0.10 / .11) no
   `docker-compose.yml`; não trocar por nomes de serviço.
 - Se o Docker Desktop não abrir com erro em `docker-secrets-engine\engine.sock` (ou "Docker Desktop is unable to

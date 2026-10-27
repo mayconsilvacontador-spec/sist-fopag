@@ -10,7 +10,15 @@ import {
   ShieldCheck, UserRound, Users, Wallet,
 } from "lucide-react";
 
-export type MenuLeaf = { label: string; href: string; module: string };
+export type MenuLeaf = {
+  label: string;
+  href: string;
+  module: string;
+  /** Título pequeno exibido ANTES deste item no menu (separa "Rotina", "Tabelas"...). */
+  section?: string;
+  /** Fora do menu (tela repetida ou de atalho), mas encontrada pela pesquisa global e pelos links. */
+  hidden?: boolean;
+};
 export type MenuGroup = {
   key: string;
   label: string;
@@ -20,13 +28,15 @@ export type MenuGroup = {
   items?: MenuLeaf[];
 };
 
-const L = (label: string, href: string, module: string): MenuLeaf => ({ label, href, module });
+const L = (label: string, href: string, module: string, extra: Partial<MenuLeaf> = {}): MenuLeaf => ({ label, href, module, ...extra });
+const H = (label: string, href: string, module: string): MenuLeaf => L(label, href, module, { hidden: true });
 
 export const MENU: MenuGroup[] = [
   {
     key: "principal", label: "Principal", icon: LayoutDashboard,
     items: [
       L("Painel Geral", "/", "painel"),
+      L("Como fazer (passo a passo)", "/guia", "painel"),
       L("Central de Alertas", "/alertas", "alertas"),
       L("Calendário", "/calendario", "calendario"),
     ],
@@ -39,107 +49,112 @@ export const MENU: MenuGroup[] = [
     ],
   },
   {
-    key: "cadastros", label: "Gestão de Cadastros", icon: Users,
+    key: "cadastros", label: "Cadastros", icon: Users,
     items: [
       // a admissão, os vínculos e o histórico funcional ficam em Servidores › Pasta do Servidor
-      L("Servidores", "/cadastros/servidores", "cadastros.vinculos"),
+      L("Servidores", "/cadastros/servidores", "cadastros.vinculos", { section: "Pessoas" }),
       L("Dependentes", "/cadastros/dependentes", "cadastros.dependentes"),
-      L("Importação de segurados", "/cadastros/importacao", "cadastros.importacao"),
-      L("Órgãos", "/cadastros/orgaos", "cadastros.orgaos"),
+      L("Importar servidores e beneficiários", "/cadastros/importacao", "cadastros.importacao"),
+      L("Órgãos", "/cadastros/orgaos", "cadastros.orgaos", { section: "Estrutura do ente" }),
       L("Cargos", "/cadastros/cargos", "cadastros.cargos"),
       L("Lotação", "/cadastros/lotacao", "cadastros.lotacao"),
       L("Entes", "/cadastros/entes", "cadastros.entes"),
-      L("Bancos", "/cadastros/bancos", "cadastros.bancos"),
+      L("Bancos", "/cadastros/bancos", "cadastros.bancos", { section: "Bancos" }),
       L("Agências", "/cadastros/agencias", "cadastros.agencias"),
+      H("Vínculos", "/cadastros/vinculos", "cadastros.vinculos"),
+      H("Servidores e beneficiários (Cadastro Único)", "/cadastros/segurados", "cadastros.segurados"),
+      H("Admissão", "/cadastros/admissao", "cadastros.segurados"),
     ],
   },
   {
     key: "previdenciaria", label: "Gestão Previdenciária", icon: FileSearch,
     items: [
-      L("Histórico Contributivo", "/previdenciaria/historico-contributivo", "previdenciaria.historico_contributivo"),
-      L("Tempo de Contribuição", "/previdenciaria/tempo-contribuicao", "previdenciaria.tempo_contribuicao"),
-      L("Regras de Aposentadoria", "/previdenciaria/regras", "previdenciaria.regras"),
-      L("Simulação de Aposentadoria", "/previdenciaria/simulacao", "previdenciaria.simulacao"),
-      L("CTC", "/previdenciaria/ctc", "previdenciaria.ctc"),
-      L("Averbações", "/previdenciaria/averbacoes", "previdenciaria.averbacoes"),
+      // tempo de contribuição e averbações também ficam na Pasta do Servidor › Benefícios
+      L("Simulação de aposentadoria", "/previdenciaria/simulacao", "previdenciaria.simulacao"),
+      L("Histórico contributivo", "/previdenciaria/historico-contributivo", "previdenciaria.historico_contributivo"),
+      L("Tempo de contribuição e averbações", "/previdenciaria/tempo-contribuicao", "previdenciaria.tempo_contribuicao"),
+      L("CTC (certidões emitidas)", "/previdenciaria/ctc", "previdenciaria.ctc"),
+      L("Regras de aposentadoria", "/previdenciaria/regras", "previdenciaria.regras", { section: "Tabelas" }),
+      H("Averbações", "/previdenciaria/averbacoes", "previdenciaria.averbacoes"),
     ],
   },
   {
     key: "concessao", label: "Concessão de Benefícios", icon: BadgeCheck,
     items: [
-      L("Aposentadoria", "/concessao/aposentadoria", "concessao.aposentadoria"),
-      L("Pensão", "/concessao/pensao", "concessao.pensao"),
-      L("Revisão", "/concessao/revisao", "concessao.revisao"),
-      L("Alteração de Benefício", "/concessao/alteracao", "concessao.alteracao"),
-      L("Suspensão", "/concessao/suspensao", "concessao.suspensao"),
-      L("Cessação", "/concessao/cessacao", "concessao.cessacao"),
-      L("Reversão", "/concessao/reversao", "concessao.reversao"),
-      L("Leitura inteligente (IA)", "/concessao/leitura", "concessao.leitura"),
-      L("Processos", "/concessao/processos", "concessao.processos"),
-      L("Modelos de portaria", "/concessao/modelos", "concessao.modelos"),
+      L("Aposentadoria", "/concessao/aposentadoria", "concessao.aposentadoria", { section: "Processos" }),
+      L("Pensão por morte", "/concessao/pensao", "concessao.pensao"),
+      L("Revisão de benefício", "/concessao/revisao", "concessao.revisao"),
+      L("Leitura inteligente de documentos", "/concessao/leitura", "concessao.leitura"),
+      L("Suspender, cessar ou reverter", "/concessao/beneficios", "concessao.suspensao", { section: "Benefícios concedidos" }),
+      L("Modelos de documentos", "/concessao/modelos", "concessao.modelos", { section: "Tabelas" }),
       L("Checklist de documentos", "/concessao/checklist", "concessao.modelos"),
+      H("Processos de concessão (todos)", "/concessao/processos", "concessao.processos"),
+      H("Suspensão de benefícios", "/concessao/suspensao", "concessao.suspensao"),
+      H("Cessação de benefícios", "/concessao/cessacao", "concessao.cessacao"),
+      H("Reversão de benefícios", "/concessao/reversao", "concessao.reversao"),
     ],
   },
   {
     key: "folha", label: "Folha de Benefícios", icon: Wallet,
     items: [
-      L("Painel da Folha", "/folha", "folha.painel"),
-      L("Beneficiários", "/folha/beneficiarios", "folha.beneficiarios"),
-      L("Isenção de IR (moléstia grave)", "/folha/isencoes-ir", "folha.beneficiarios"),
-      L("Rubricas", "/folha/rubricas", "folha.rubricas"),
-      L("Folha Mensal", "/folha/folha-mensal", "folha.folha_mensal"),
-      L("Cálculo", "/folha/calculo", "folha.calculo"),
-      L("Conferência", "/folha/conferencia", "folha.conferencia"),
-      L("Retroativos", "/folha/retroativos", "folha.retroativos"),
-      L("Diferenças", "/folha/diferencas", "folha.diferencas"),
-      L("Consignações", "/folha/consignacoes", "folha.consignacoes"),
-      L("Consignatárias", "/folha/consignatarias", "folha.consignacoes"),
-      L("Pensão Alimentícia", "/folha/pensao-alimenticia", "folha.pensao_alimenticia"),
-      L("13º Salário", "/folha/decimo-terceiro", "folha.decimo_terceiro"),
-      L("Fechamento", "/folha/fechamento", "folha.fechamento"),
-      L("Reabertura", "/folha/reabertura", "folha.reabertura"),
-      L("Arquivo Bancário", "/folha/arquivo-bancario", "folha.arquivo_bancario"),
+      // a Folha Mensal faz o ciclo inteiro: abrir → calcular → conferir → fechar → pagar (e reabrir)
+      L("Folha mensal", "/folha/folha-mensal", "folha.folha_mensal", { section: "Rotina do mês" }),
+      L("13º salário", "/folha/decimo-terceiro", "folha.decimo_terceiro"),
       L("Contracheques", "/folha/contracheques", "folha.contracheques"),
-      L("Informe de Rendimentos", "/folha/informe-rendimentos", "folha.informe_rendimentos"),
-      L("Relatórios", "/folha/relatorios", "folha.relatorios"),
+      L("Informe de rendimentos (IR)", "/folha/informe-rendimentos", "folha.informe_rendimentos"),
+      L("Beneficiários", "/folha/beneficiarios", "folha.beneficiarios", { section: "Beneficiários e lançamentos" }),
+      L("Diferenças e descontos avulsos", "/folha/diferencas", "folha.diferencas"),
+      L("Retroativos", "/folha/retroativos", "folha.retroativos"),
+      L("Consignações (empréstimos)", "/folha/consignacoes", "folha.consignacoes"),
+      L("Pensão alimentícia", "/folha/pensao-alimenticia", "folha.pensao_alimenticia"),
+      L("Rubricas", "/folha/rubricas", "folha.rubricas", { section: "Tabelas" }),
+      L("Consignatárias", "/folha/consignatarias", "folha.consignacoes"),
+      L("Isenção de IR (moléstia grave)", "/folha/isencoes-ir", "folha.beneficiarios"),
+      H("Painel da Folha", "/folha", "folha.painel"),
+      H("Cálculo da folha", "/folha/calculo", "folha.calculo"),
+      H("Conferência da folha", "/folha/conferencia", "folha.conferencia"),
+      H("Fechamento da folha", "/folha/fechamento", "folha.fechamento"),
+      H("Reabertura da folha", "/folha/reabertura", "folha.reabertura"),
+      H("Arquivo bancário da folha", "/folha/arquivo-bancario", "folha.arquivo_bancario"),
+      H("Relatórios da folha", "/folha/relatorios", "folha.relatorios"),
     ],
   },
   {
     key: "ativos", label: "Folha de Ativos", icon: Briefcase,
     items: [
-      L("Folhas", "/ativos/folhas", "ativos.folha"),
+      L("Folhas por órgão", "/ativos/folhas", "ativos.folha", { section: "Rotina do mês" }),
       L("Lançamentos", "/ativos/lancamentos", "ativos.lancamentos"),
-      L("Tabela de Vencimentos", "/ativos/vencimentos", "ativos.vencimentos"),
+      L("Ficha financeira", "/ativos/ficha-financeira", "ativos.ficha_financeira"),
+      L("Tabela de vencimentos", "/ativos/vencimentos", "ativos.vencimentos", { section: "Tabelas" }),
       L("Rubricas", "/ativos/rubricas", "ativos.rubricas"),
-      L("Ficha financeira (importação)", "/ativos/ficha-financeira", "ativos.ficha_financeira"),
     ],
   },
   {
     key: "esocial", label: "eSocial RPPS", icon: Send,
     items: [
       L("Painel", "/esocial", "esocial.painel"),
-      L("S-2400", "/esocial/s-2400", "esocial.s2400"),
-      L("S-2410", "/esocial/s-2410", "esocial.s2410"),
-      L("S-1207", "/esocial/s-1207", "esocial.s1207"),
-      L("Eventos", "/esocial/eventos", "esocial.eventos"),
+      L("Eventos (gerar, conferir, exportar, retorno)", "/esocial/eventos", "esocial.eventos"),
       L("Transmissão", "/esocial/transmissao", "esocial.transmissao"),
-      L("Retornos", "/esocial/retornos", "esocial.retornos"),
-      L("Rejeições", "/esocial/rejeicoes", "esocial.rejeicoes"),
-      L("Pendências", "/esocial/pendencias", "esocial.pendencias"),
       L("Histórico de envios", "/esocial/historico", "esocial.historico"),
+      H("S-2400 — Beneficiários", "/esocial/s-2400", "esocial.s2400"),
+      H("S-2410 / S-2420 — Benefícios", "/esocial/s-2410", "esocial.s2410"),
+      H("S-1207 — Folha de benefícios", "/esocial/s-1207", "esocial.s1207"),
+      H("Retornos do eSocial", "/esocial/retornos", "esocial.retornos"),
+      H("Rejeições do eSocial", "/esocial/rejeicoes", "esocial.rejeicoes"),
+      H("Pendências do eSocial", "/esocial/pendencias", "esocial.pendencias"),
     ],
   },
   {
     key: "arrecadacao", label: "Arrecadação", icon: Landmark,
     items: [
-      L("Contribuição do Servidor", "/arrecadacao/servidor", "arrecadacao.servidor"),
-      L("Contribuição Patronal", "/arrecadacao/patronal", "arrecadacao.patronal"),
+      L("Contribuição do servidor", "/arrecadacao/servidor", "arrecadacao.servidor", { section: "Contribuições" }),
+      L("Contribuição patronal", "/arrecadacao/patronal", "arrecadacao.patronal"),
       L("Aportes", "/arrecadacao/aportes", "arrecadacao.aportes"),
       L("Parcelamentos", "/arrecadacao/parcelamentos", "arrecadacao.parcelamentos"),
-      L("Receitas", "/arrecadacao/receitas", "arrecadacao.receitas"),
-      L("Conciliação", "/arrecadacao/conciliacao", "arrecadacao.conciliacao"),
+      L("Receitas recebidas", "/arrecadacao/receitas", "arrecadacao.receitas", { section: "Recebimentos" }),
+      L("Conciliação das receitas", "/arrecadacao/conciliacao", "arrecadacao.conciliacao"),
       L("Divergências", "/arrecadacao/divergencias", "arrecadacao.divergencias"),
-      L("Alíquotas", "/arrecadacao/aliquotas", "arrecadacao.aliquotas"),
+      L("Alíquotas", "/arrecadacao/aliquotas", "arrecadacao.aliquotas", { section: "Tabelas" }),
     ],
   },
   {
@@ -148,7 +163,7 @@ export const MENU: MenuGroup[] = [
       L("Processos", "/comprev/processos", "comprev.processos"),
       L("Recebimentos", "/comprev/recebimentos", "comprev.recebimentos"),
       L("Pagamentos", "/comprev/pagamentos", "comprev.pagamentos"),
-      L("Fluxo Mensal", "/comprev/fluxo", "comprev.fluxo"),
+      L("Fluxo mensal", "/comprev/fluxo", "comprev.fluxo"),
       L("Indicadores", "/comprev/indicadores", "comprev.indicadores"),
       L("Relatórios", "/comprev/relatorios", "comprev.relatorios"),
     ],
@@ -157,17 +172,17 @@ export const MENU: MenuGroup[] = [
     key: "recadastramento", label: "Recadastramento", icon: ClipboardCheck,
     items: [
       L("Campanhas", "/recadastramento/campanhas", "recadastramento.campanhas"),
-      L("Segurados", "/recadastramento/segurados", "recadastramento.segurados"),
+      L("Servidores", "/recadastramento/segurados", "recadastramento.segurados"),
       L("Beneficiários", "/recadastramento/beneficiarios", "recadastramento.beneficiarios"),
-      L("Pendências", "/recadastramento/pendencias", "recadastramento.pendencias"),
+      L("Pendências para a equipe", "/recadastramento/pendencias", "recadastramento.pendencias"),
     ],
   },
   {
     key: "provadevida", label: "Prova de Vida", icon: Fingerprint,
     items: [
       L("Campanhas", "/prova-de-vida/campanhas", "provadevida.campanhas"),
-      L("Realizadas", "/prova-de-vida/realizadas", "provadevida.realizadas"),
       L("Pendentes", "/prova-de-vida/pendentes", "provadevida.pendentes"),
+      L("Realizadas", "/prova-de-vida/realizadas", "provadevida.realizadas"),
       L("Bloqueados", "/prova-de-vida/bloqueados", "provadevida.bloqueados"),
       L("Relatórios", "/prova-de-vida/relatorios", "provadevida.relatorios"),
     ],
@@ -175,17 +190,17 @@ export const MENU: MenuGroup[] = [
   {
     key: "financeiro", label: "Gestão Financeira", icon: Banknote,
     items: [
-      L("Pagamentos", "/financeiro/pagamentos", "financeiro.pagamentos"),
-      L("Arquivos Bancários", "/financeiro/arquivos-bancarios", "financeiro.arquivos_bancarios"),
-      L("Bancos", "/financeiro/bancos", "financeiro.bancos"),
-      L("Conciliação", "/financeiro/conciliacao", "financeiro.conciliacao"),
-      L("Integração Contábil", "/financeiro/integracao-contabil", "financeiro.integracao_contabil"),
+      L("Pagamento da folha (lotes)", "/financeiro/pagamentos", "financeiro.pagamentos"),
+      L("Arquivos bancários", "/financeiro/arquivos-bancarios", "financeiro.arquivos_bancarios"),
+      L("Conciliação bancária (extrato)", "/financeiro/conciliacao", "financeiro.conciliacao"),
+      L("Integração contábil", "/financeiro/integracao-contabil", "financeiro.integracao_contabil"),
+      L("Contas da instituição", "/financeiro/bancos", "financeiro.bancos", { section: "Tabelas" }),
     ],
   },
   {
     key: "atuarial", label: "Avaliação Atuarial", icon: Calculator,
     items: [
-      L("Base de Dados (SPREV)", "/atuarial/base-dados", "atuarial.base"),
+      L("Base de dados (SPREV)", "/atuarial/base-dados", "atuarial.base"),
     ],
   },
   {
@@ -201,32 +216,19 @@ export const MENU: MenuGroup[] = [
       L("COMPREV", "/relatorios/comprev", "relatorios.comprev"),
     ],
   },
-  {
-    key: "auditoria", label: "Auditoria", icon: ShieldCheck,
-    items: [
-      L("Alterações", "/auditoria?categoria=alteracoes", "auditoria"),
-      L("Cálculos", "/auditoria?categoria=calculos", "auditoria"),
-      L("Exclusões", "/auditoria?categoria=exclusoes", "auditoria"),
-      L("Usuários", "/auditoria?categoria=usuarios", "auditoria"),
-      L("Acessos", "/auditoria?categoria=acessos", "auditoria"),
-      L("Fechamentos", "/auditoria?categoria=fechamentos", "auditoria"),
-      L("Reaberturas", "/auditoria?categoria=reaberturas", "auditoria"),
-      L("Exportações", "/auditoria?categoria=exportacoes", "auditoria"),
-    ],
-  },
+  // a tela de auditoria tem os filtros por categoria (alterações, cálculos, exclusões, acessos...)
+  { key: "auditoria", label: "Auditoria", icon: ShieldCheck, href: "/auditoria", module: "auditoria" },
   { key: "portal", label: "Portal do Segurado", icon: UserRound, href: "/portal", module: "portal" },
   {
     key: "admin", label: "Administração", icon: Settings,
     items: [
-      L("Usuários", "/administracao/usuarios", "admin.usuarios"),
+      L("Usuários", "/administracao/usuarios", "admin.usuarios", { section: "Acesso" }),
       L("Perfis", "/administracao/perfis", "admin.perfis"),
       L("Permissões", "/administracao/permissoes", "admin.permissoes"),
-      L("Instituição", "/administracao/instituicao", "admin.instituicao"),
-      L("Parâmetros", "/administracao/parametros", "admin.parametros"),
+      L("Instituição", "/administracao/instituicao", "admin.instituicao", { section: "Instituição" }),
       L("Exercícios", "/administracao/exercicios", "admin.exercicios"),
       L("Competências", "/administracao/competencias", "admin.competencias"),
-      L("Tabelas", "/administracao/tabelas", "admin.tabelas"),
-      L("Configurações", "/administracao/configuracoes", "admin.configuracoes"),
+      L("Parâmetros", "/administracao/parametros", "admin.parametros"),
     ],
   },
 ];

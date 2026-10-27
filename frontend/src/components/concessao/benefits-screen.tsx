@@ -34,15 +34,15 @@ const OPS: Record<Op, { label: string; module: string; when: BenefitRow["status"
 };
 const STATUS_VARIANT = { ATIVO: "success", SUSPENSO: "warning", CESSADO: "neutral" } as const;
 
-export function BenefitsScreen({ focus }: { focus?: Op }) {
+export function BenefitsScreen({ focus, area }: { focus?: Op; area?: "concessao" }) {
   return (
     <RequirePermission module="folha.beneficiarios">
-      <Screen focus={focus} />
+      <Screen focus={focus} area={area} />
     </RequirePermission>
   );
 }
 
-function Screen({ focus }: { focus?: Op }) {
+function Screen({ focus, area }: { focus?: Op; area?: "concessao" }) {
   const { can } = useSession();
   const [search, setSearch] = useState("");
   const [debounced, setDebounced] = useState("");
@@ -61,15 +61,19 @@ function Screen({ focus }: { focus?: Op }) {
   }, []);
   const { data, error, isLoading, mutate } = useSWR<Paginated<BenefitRow>>(
     `beneficios${qs({ search: debounced, kind, status, massa, page })}`, fetcher, { keepPreviousData: true });
-  const title = focus ? OPS[focus].label + " de benefícios" : "Beneficiários";
+  // area "concessao": todas as operações (suspender, restabelecer, cessar, reverter) numa tela só
+  const ops = Boolean(focus || area);
+  const title = focus ? OPS[focus].label + " de benefícios" : area ? "Suspender, cessar ou reverter" : "Beneficiários";
 
   return (
     <>
       <PageHeader title={title}
-        description={focus ? `${OPS[focus].hint} Escolha o benefício na lista.` : "Aposentadorias e pensões implantadas — base da folha de benefícios (Fase 5)."}
-        breadcrumb={[{ label: focus ? "Concessão de Benefícios" : "Folha de Benefícios" }, { label: title }]} />
+        description={focus ? `${OPS[focus].hint} Escolha o benefício na lista.`
+          : area ? "Clique no benefício para suspender (ou restabelecer), cessar (óbito, fim da cota) ou reverter (retorno à atividade). Cada operação pede a sua senha e fica registrada."
+            : "Aposentadorias e pensões implantadas — base da folha de benefícios."}
+        breadcrumb={[{ label: ops ? "Concessão de Benefícios" : "Folha de Benefícios" }, { label: title }]} />
       <Tabs defaultValue="implantados">
-        {!focus && (
+        {!ops && (
           <TabsList className="mb-3">
             <TabsTrigger value="implantados">Benefícios implantados</TabsTrigger>
             <TabsTrigger value="importados">Importados aguardando implantação</TabsTrigger>

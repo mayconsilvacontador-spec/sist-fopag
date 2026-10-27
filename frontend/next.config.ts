@@ -15,6 +15,11 @@ const nextConfig: NextConfig = {
   async headers() {
     return [{ source: "/:path*", headers: securityHeaders }];
   },
+  // Sem cache do webpack em disco (.next/cache passava de 900 MB); o build fica um pouco mais lento
+  webpack: (config) => {
+    config.cache = false;
+    return config;
+  },
 };
 
 export default nextConfig;

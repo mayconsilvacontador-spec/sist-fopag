@@ -106,11 +106,14 @@ export function Sidebar() {
                 </button>
                 {expanded && (
                   <ul className="mb-2 mt-0.5 space-y-px">
-                    {g.items.map((item) => {
+                    {g.items.filter((item) => !item.hidden).map((item) => {
                       const active = isLeafActive(item, pathname, search);
                       const info = moduleInfo(item.module);
                       return (
                         <li key={item.href}>
+                          {item.section && (
+                            <div className="mb-0.5 mt-2 pl-5 text-[10px] font-semibold uppercase tracking-[0.12em] text-sidebar-muted first:mt-0.5">{item.section}</div>
+                          )}
                           <Link href={item.href}
                             className={cn("flex h-8 items-center gap-2 rounded-md border-l-2 pl-5 pr-2.5 text-[13px] transition-colors",
                               active ? "border-primary bg-sidebar-active font-semibold text-sidebar-active-foreground"
