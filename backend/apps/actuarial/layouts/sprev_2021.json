@@ -1,0 +1,1950 @@
+{
+ "codigo": "SPREV_2021",
+ "nome": "Leiaute padrão SPREV — Base de dados para Avaliação Atuarial",
+ "fonte": "https://www.gov.br/previdencia/pt-br/assuntos/rpps/atuaria/suporte/arquivos_atuaria/arquivos/2020/layout_dicionario_base-de-dados-2021_03112020.xlsx",
+ "observacao": "Dicionário oficial 2021, mantido pela SPREV nas avaliações seguintes (Esclarecimentos sobre o leiaute — Avaliação Atuarial 2024).",
+ "arquivos": {
+  "servidores": [
+   {
+    "nome": "NU_ANO",
+    "descricao": "ANO DE REFERÊNCIA (ANO DO EXERCÍCIO DA DRAA)",
+    "tipo": "Inteiro",
+    "formato": "",
+    "categorias": "",
+    "observacao": ""
+   },
+   {
+    "nome": "NU_MES",
+    "descricao": "MÊS DE REFERÊNCIA (MÊS DO EXERCÍCIO DA DRAA)",
+    "tipo": "Inteiro",
+    "formato": "",
+    "categorias": "",
+    "observacao": ""
+   },
+   {
+    "nome": "CO_IBGE",
+    "descricao": "CODIGO DO ENTE NO IBGE",
+    "tipo": "Inteiro",
+    "formato": "",
+    "categorias": "",
+    "observacao": "Conforme Códigos na aba \"Cod IBGE\""
+   },
+   {
+    "nome": "NO_ENTE",
+    "descricao": "NOME DO ENTE",
+    "tipo": "Caracter",
+    "formato": "",
+    "categorias": "",
+    "observacao": "Nome do Município ou Governo do Estado"
+   },
+   {
+    "nome": "SG_UF",
+    "descricao": "SIGLA DA UF DO ENTE",
+    "tipo": "Caracter",
+    "formato": "",
+    "categorias": "",
+    "observacao": "Sigla da UF do Município ou do Estado"
+   },
+   {
+    "nome": "CO_COMP_MASSA",
+    "descricao": "COMPOSIÇÃO DA MASSA",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "1 - Civil\n2 - Militar",
+    "observacao": ""
+   },
+   {
+    "nome": "CO_TIPO_FUNDO",
+    "descricao": "TIPO DE FUNDO",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "1 - Fundo em Capitalização ou sem Segregação da Massa\n2 - Fundo em Repartição (em caso de Segregação da Massa)\n3 - Beneficiário sob responsabilidade direta do ente federativo (\"Mantidos pelo Tesouro\")",
+    "observacao": ""
+   },
+   {
+    "nome": "NU_CNPJ_ORGAO",
+    "descricao": "CNPJ do órgão ou entidade ao qual o servidor está vinculado, conforme informado no DIPR",
+    "tipo": "Caracter",
+    "formato": "000.000.000/0000-00",
+    "categorias": "",
+    "observacao": ""
+   },
+   {
+    "nome": "NO_ORGAO",
+    "descricao": "NOME DO ÓRGÃO/ENTIDADE",
+    "tipo": "Caracter",
+    "formato": "",
+    "categorias": "",
+    "observacao": ""
+   },
+   {
+    "nome": "CO_PODER",
+    "descricao": "CÓDIGO DO PODER",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "1 - Executivo\n2 - Legislativo\n3 - Judiciário\n4 - Ministério Público\n5 - Tribunal de Contas\n6 - Defensoria Pública",
+    "observacao": ""
+   },
+   {
+    "nome": "CO_TIPO_PODER",
+    "descricao": "CÓDIGO DO TIPO DE PODER",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "1 - Administração Direta\n2 - Administração Indireta",
+    "observacao": ""
+   },
+   {
+    "nome": "CO_TIPO_POPULACAO",
+    "descricao": "CÓDIGO DO TIPO DE POPULAÇÃO COBERTA",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "1 - Servidores Ativos\n2 - Servidores Ativos Iminentes\n3 - Outros - Ativos\n8 - Militares em atividade",
+    "observacao": ""
+   },
+   {
+    "nome": "CO_TIPO_CARGO",
+    "descricao": "CÓDIGO DO TIPO DE CARGO",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "Para Civis:\n1 - Magistrados, Membros do Min. Público ou de Tribunal de Contas\n2 - Professores da Educ. Infantil e do Ensino Fund. e Médio\n3 - Professores do Ensino Superior\n4 - Policiais Civis (Federais, Distritais ou Estaduais)\n5 - Agente Penitenciário\n6 - Guarda Municipal\n7 - Demais Servidores\nPara Militares:\n8 - Militares",
+    "observacao": ""
+   },
+   {
+    "nome": "CO_CRITERIO_ELEGIBILIDADE",
+    "descricao": "CÓDIGO DO CRITÉRIO DE ELEGIBILIDADE",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "Para Civis:\n1 - Sem critério diferenciado para aposentadoria\n2 - Com deficiência (Art. 40, § 4º, inc. I, CF)\n3 - Critério para aposentadoria como professor\n4 - Exerce atividade de risco (Art. 40, § 4º, inc. II, CF)\n5 - Exerce atividade prejudiciais à saúde ou integridade física (Art. 40, § 4º, inc. III, CF)\nPara Militares:\n8 - Militares em Atividade",
+    "observacao": ""
+   },
+   {
+    "nome": "ID_SERVIDOR_MATRICULA",
+    "descricao": "IDENTIFICAÇÃO DO SERVIDOR (matrícula)",
+    "tipo": "Inteiro",
+    "formato": "",
+    "categorias": "",
+    "observacao": ""
+   },
+   {
+    "nome": "ID_SERVIDOR_CPF",
+    "descricao": "IDENTIFICAÇÃO DO SERVIDOR\n(CPF)",
+    "tipo": "Caracter",
+    "formato": "000.000.000-00",
+    "categorias": "",
+    "observacao": ""
+   },
+   {
+    "nome": "ID_SERVIDOR_PIS_PASEP",
+    "descricao": "IDENTIFICAÇÃO DO SERVIDOR\n(PIS-PASEP)",
+    "tipo": "Caracter",
+    "formato": "000.00000.00-0",
+    "categorias": "",
+    "observacao": ""
+   },
+   {
+    "nome": "CO_SEXO_SERVIDOR",
+    "descricao": "CÓDIGO DO SEXO DO SERVIDOR",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "1 - Feminino\n2 - Masculino",
+    "observacao": ""
+   },
+   {
+    "nome": "CO_EST_CIVIL_SERVIDOR",
+    "descricao": "CÓDIGO DO ESTADO CIVIL DO SERVIDOR",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "1 - solteiro (a)\n2 - casado (a)\n3 - viúvo (a)\n4 - separado (a) judicialmente\n5 - divorciado (a)\n6 - união estável\n9 - outros",
+    "observacao": ""
+   },
+   {
+    "nome": "DT_NASC_SERVIDOR",
+    "descricao": "DATA DE NASCIMENTO DO SERVIDOR",
+    "tipo": "Data",
+    "formato": "dd/mm/aaaa",
+    "categorias": "",
+    "observacao": ""
+   },
+   {
+    "nome": "CO_SITUACAO_FUNCIONAL",
+    "descricao": "CÓDIGO DA SITUAÇÃO FUNCIONAL DO SERVIDOR",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "SITUAÇÃO FUNCIONAL (na competência da base cadastral da avaliação atuarial)\n1 - Em Exercício\n2 - Licenciado(a) com Remuneração\n3 - Licenciado(a) sem Remuneração\n4 - Cedido(a) com Ônus\n5 - Cedido(a) sem Ônus\n6 - Requisitado(a) com Ônus\n7 - Requisitado(a) sem Ônus\n8 - Em Disponibilidade\n9 - Afastado Mandato Eletivo\n10 - Recluso ou Detido\n11 -Outros\nOBS: Servidor afastado por auxílio-doença e/ou salário-maternidade integra a categoria \"Em Exercício\" e deve ser informado normalmente",
+    "observacao": "OBS: Servidor afastado por auxílio-doença e/ou salário-maternidade integra a categoria \"Em Exercício\" e deve ser informado normalmente"
+   },
+   {
+    "nome": "CO_TIPO_VINCULO",
+    "descricao": "CÓDIGO DO TIPO DE VÍNCULO",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "1 - Servidor Efetivo\n2 - Servidor Efetivo Ocupante de Cargo em Comissão\n3 - Estável\n4 - Outros",
+    "observacao": ""
+   },
+   {
+    "nome": "DT_ING_SERV_PUB",
+    "descricao": "DATA DE INGRESSO NO SERVIÇO PÚBLICO",
+    "tipo": "Data",
+    "formato": "dd/mm/aaaa",
+    "categorias": "",
+    "observacao": ""
+   },
+   {
+    "nome": "DT_ING_ENTE",
+    "descricao": "DATA DE INGRESSO NO ENTE",
+    "tipo": "Data",
+    "formato": "dd/mm/aaaa",
+    "categorias": "",
+    "observacao": ""
+   },
+   {
+    "nome": "DT_ING_CARREIRA",
+    "descricao": "DATA DE INGRESSO NA CARREIRA ATUAL",
+    "tipo": "Data",
+    "formato": "dd/mm/aaaa",
+    "categorias": "",
+    "observacao": ""
+   },
+   {
+    "nome": "NO_CARREIRA",
+    "descricao": "NOME DA CARREIRA ATUAL",
+    "tipo": "Caracter",
+    "formato": "",
+    "categorias": "",
+    "observacao": ""
+   },
+   {
+    "nome": "DT_ING_CARGO",
+    "descricao": "DATA DE INÍCIO DE EXERCÍCIO NO CARGO ATUAL",
+    "tipo": "Data",
+    "formato": "dd/mm/aaaa",
+    "categorias": "",
+    "observacao": ""
+   },
+   {
+    "nome": "NO_CARGO",
+    "descricao": "NOME DO CARGO ATUAL",
+    "tipo": "Caracter",
+    "formato": "",
+    "categorias": "",
+    "observacao": ""
+   },
+   {
+    "nome": "VL_BASE_CALCULO",
+    "descricao": "BASE DE CÁLCULO MENSAL DO SERVIDOR",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "Com duas casas decimais",
+    "observacao": "- Valor Bruto da Remuneração de Contribuição;\n- Não formatar como Moeda;\n- Usar a vírgula como separador de decimal"
+   },
+   {
+    "nome": "VL_REMUNERACAO",
+    "descricao": "REMUNERAÇÃO MENSAL TOTAL DO SERVIDOR",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "Com duas casas decimais",
+    "observacao": "- Valor Bruto Total da Remuneração;\n- Não formatar como Moeda;\n- Usar a vírgula como separador de decimal"
+   },
+   {
+    "nome": "VL_CONTRIBUICAO",
+    "descricao": "CONTRIBUIÇÃO MENSAL",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "Com duas casas decimais",
+    "observacao": "- valor da contribuição mensal do segurado para o RPPS na competência da base de dados da avaliação atuarial)\n(em R$)"
+   },
+   {
+    "nome": "NU_TEMPO_RGPS",
+    "descricao": "TEMPO DE CONTRIBUIÇÃO DO SERVIDOR PARA O RGPS, ANTERIOR À ADMISSÃO NO ENTE\n(em dias)",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "Apenas números inteiros",
+    "observacao": ""
+   },
+   {
+    "nome": "NU_TEMPO_RPPS_MUN",
+    "descricao": "TEMPO DE CONTRIBUIÇÃO DO SERVIDOR PARA OUTROS \"RPPS DA ESFERA MUNICIPAL\", ANTERIOR À ADMISSÃO NO ENTE\n(em dias)",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "Apenas números inteiros",
+    "observacao": "Indicar a soma das averbações para os RPPS municipais"
+   },
+   {
+    "nome": "NU_TEMPO_RPPS_EST",
+    "descricao": "TEMPO DE CONTRIBUIÇÃO DO SERVIDOR PARA OUTROS \"RPPS DA ESFERA ESTADUAL\", ANTERIOR À ADMISSÃO NO ENTE\n(em dias)",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "Apenas números inteiros",
+    "observacao": "Indicar a soma das averbações para os RPPS estaduais"
+   },
+   {
+    "nome": "NU_TEMPO_RPPS_FED",
+    "descricao": "TEMPO DE CONTRIBUIÇÃO DO SERVIDOR PARA OUTROS \"RPPS DA ESFERA FEDERAL\", ANTERIOR À ADMISSÃO NO ENTE\n(em dias)",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "Apenas números inteiros",
+    "observacao": "Indicar a soma das averbações para o RPPS federal"
+   },
+   {
+    "nome": "NU_DEPENDENTES",
+    "descricao": "NÚMERO DE DEPENDENTES DO SERVIDOR\n(Incluindo o cônjuge)",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "Apenas números inteiros",
+    "observacao": ""
+   },
+   {
+    "nome": "IN_ABONO_PERMANENCIA",
+    "descricao": "INDICADOR DE RECEBIMENTO DE ABONO DE PERMANÊNCIA",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "1 - Sim\n2 - Não",
+    "observacao": ""
+   },
+   {
+    "nome": "DT_INICIO_ABONO",
+    "descricao": "DATA DE INÍCIO DE RECEBIMENTO DO ABONO DE PERMANÊNCIA",
+    "tipo": "Data",
+    "formato": "dd/mm/aaaa",
+    "categorias": "",
+    "observacao": ""
+   },
+   {
+    "nome": "IN_PREV_COMP",
+    "descricao": "INDICADOR DE PREVIDÊNCIA COMPLEMENTAR",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "1 - Sim\n2 - Não",
+    "observacao": "servidor sujeito ao teto do RGPS em decorrência de instituição pelo ente de regime de previdência complementar"
+   },
+   {
+    "nome": "VL_TETO_ESPECIFICO",
+    "descricao": "TETO CONSTITUCIONAL REMUNERATÓRIO ESPECÍFICO (DOS SERVIDORES DO RESPECTIVO PODER)",
+    "tipo": "Numérico",
+    "formato": "Em R$",
+    "categorias": "Com duas casas decimais",
+    "observacao": "(Art. 37, XI, da CF)"
+   },
+   {
+    "nome": "DT_PROV_APOSENT",
+    "descricao": "DATA PROVAVEL DE APOSENTADORIA",
+    "tipo": "Data",
+    "formato": "dd/mm/aaaa",
+    "categorias": "",
+    "observacao": "Corresponde à data da provável aposentadoria do servidor, calculada pelo atuário, na data focal da avaliação, conforme os requisitios de elegibilidade constantes da Lei do RPPS"
+   }
+  ],
+  "aposentados": [
+   {
+    "nome": "NU_ANO",
+    "descricao": "ANO DE REFERÊNCIA (ANO DO EXERCÍCIO DA DRAA)",
+    "tipo": "Inteiro",
+    "formato": "",
+    "categorias": "",
+    "observacao": ""
+   },
+   {
+    "nome": "NU_MES",
+    "descricao": "MÊS DE REFERÊNCIA (MÊS DO EXERCÍCIO DA DRAA)",
+    "tipo": "Inteiro",
+    "formato": "",
+    "categorias": "",
+    "observacao": ""
+   },
+   {
+    "nome": "CO_IBGE",
+    "descricao": "CODIGO DO ENTE NO IBGE",
+    "tipo": "Inteiro",
+    "formato": "",
+    "categorias": "",
+    "observacao": "Conforme Códigos na aba \"Cod IBGE\""
+   },
+   {
+    "nome": "NO_ENTE",
+    "descricao": "NOME DO ENTE",
+    "tipo": "Caracter",
+    "formato": "",
+    "categorias": "",
+    "observacao": "Nome do Município ou Governo do Estado"
+   },
+   {
+    "nome": "SG_UF",
+    "descricao": "SIGLA DA UF DO ENTE",
+    "tipo": "Caracter",
+    "formato": "",
+    "categorias": "",
+    "observacao": "Sigla da UF do Município ou do Estado"
+   },
+   {
+    "nome": "CO_COMP_MASSA",
+    "descricao": "COMPOSIÇÃO DA MASSA",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "1 - Civil\n2 - Militar",
+    "observacao": ""
+   },
+   {
+    "nome": "CO_TIPO_FUNDO",
+    "descricao": "TIPO DE FUNDO",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "1 - Fundo em Capitalização ou sem Segregação da Massa\n2 - Fundo em Repartição (em caso de Segregação da Massa)\n3 - Beneficiário sob responsabilidade direta do ente federativo (\"Mantidos pelo Tesouro\")",
+    "observacao": ""
+   },
+   {
+    "nome": "CNPJ_ORGAO",
+    "descricao": "CNPJ do órgão ou entidade ao qual o aposentado está vinculado, conforme informado no DIPR",
+    "tipo": "Caracter",
+    "formato": "000.000.000/0000-00",
+    "categorias": "",
+    "observacao": ""
+   },
+   {
+    "nome": "NO_ORGAO",
+    "descricao": "NOME DO ÓRGÃO/ENTIDADE",
+    "tipo": "Caracter",
+    "formato": "",
+    "categorias": "",
+    "observacao": ""
+   },
+   {
+    "nome": "CO_PODER",
+    "descricao": "CÓDIGO DO PODER",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "1 - Executivo\n2 - Legislativo\n3 - Judiciário\n4 - Ministério Público\n5 - Tribunal de Contas\n6 - Defensoria Pública",
+    "observacao": ""
+   },
+   {
+    "nome": "CO_TIPO_PODER",
+    "descricao": "CÓDIGO DO TIPO DE PODER",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "1 - Administração Direta\n2 - Administração Indireta",
+    "observacao": ""
+   },
+   {
+    "nome": "CO_TIPO_POPULACAO",
+    "descricao": "CÓDIGO DO TIPO DE POPULAÇÃO COBERTA",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "4 - Civis aposentados\n9 - Militares inativos\nComentário: dando continuidade a numeração da População Coberta (A) dos Ativos, para não misturar ativo com aposentado e pensionista)",
+    "observacao": ""
+   },
+   {
+    "nome": "CO_TIPO_CARGO",
+    "descricao": "CÓDIGO DO TIPO DE CARGO",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "Para Civis:\n1 - Magistrados, Membros do Min. Público ou de Tribunal de Contas\n2 - Professores da Educ. Infantil e do Ensino Fund. e Médio\n3 - Professores do Ensino Superior\n4 - Policiais Civis (Federais, Distritais ou Estaduais)\n5 - Agente Penitenciário\n6 - Guarda Municipal\n7 - Demais Servidores\nPara Militares:\n8 - Militares",
+    "observacao": ""
+   },
+   {
+    "nome": "CO_TIPO_APOSENTADORIA",
+    "descricao": "CÓDIGO DO TIPO DE APOSENTADORIA",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "Para Civis:\n1 - Aposentadoria por Idade\n2 - Aposentadoria por Tempo de Contribuição\n3 - Aposentadoria Compulsória\n4 - Aposentadoria por Invalidez\n5 - Aposentadoria como Professor\n6 - Aposentadoria Especial - atividade de risco (Art. 40, § 4º, inc. II, CF)\n7 - Aposentadoria Especial - atividade prejudiciais à saúde ou integridade física (Art. 40, § 4º, inc. III, CF)\nPara Militares Inativos:\n9 - Militares Inativos - Reserva Remunerada\n10 - Militares Inativos - Reforma",
+    "observacao": ""
+   },
+   {
+    "nome": "ID_APOSENTADO_MATRICULA",
+    "descricao": "IDENTIFICAÇÃO DO APOSENTADO\n(matrícula)",
+    "tipo": "Inteiro",
+    "formato": "",
+    "categorias": "",
+    "observacao": ""
+   },
+   {
+    "nome": "ID_APOSENTADO_CPF",
+    "descricao": "IDENTIFICAÇÃO DO APOSENTADO\n(CPF)",
+    "tipo": "Caracter",
+    "formato": "000.000.000-00",
+    "categorias": "",
+    "observacao": ""
+   },
+   {
+    "nome": "ID_APOSENT_PIS_PASEP",
+    "descricao": "IDENTIFICAÇÃO DO APOSENTADO\n(PIS-PASEP)",
+    "tipo": "Caracter",
+    "formato": "000.00000.00-0",
+    "categorias": "",
+    "observacao": ""
+   },
+   {
+    "nome": "CO_SEXO_APOSENTADO",
+    "descricao": "CÓDIGO DO SEXO DO APOSENTADO",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "1 - Feminino\n2 - Masculino",
+    "observacao": ""
+   },
+   {
+    "nome": "CO_EST_CIVIL_APOSENTADO",
+    "descricao": "CÓDIGO DO ESTADO CIVIL DO APOSENTADO",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "1 - solteiro (a)\n2 - casado (a)\n3 - viúvo (a)\n4 - separado (a) judicialmente\n5 - divorciado (a)\n6 - união estável\n9 - outros",
+    "observacao": ""
+   },
+   {
+    "nome": "DT_NASC_APOSENTADO",
+    "descricao": "DATA DE NASCIMENTO DO APOSENTADO",
+    "tipo": "Data",
+    "formato": "dd/mm/aaaa",
+    "categorias": "",
+    "observacao": ""
+   },
+   {
+    "nome": "DT_ING_SERV_PUB",
+    "descricao": "DATA DE INGRESSO NO SERVIÇO PÚBLICO",
+    "tipo": "Data",
+    "formato": "dd/mm/aaaa",
+    "categorias": "",
+    "observacao": ""
+   },
+   {
+    "nome": "DATA DE INGRESSO NO ENTE",
+    "descricao": "DATA DE INGRESSO NO ENTE",
+    "tipo": "Data",
+    "formato": "dd/mm/aaaa",
+    "categorias": "",
+    "observacao": ""
+   },
+   {
+    "nome": "DT_INICIO_APOSENTADORIA",
+    "descricao": "DATA DE INÍCIO DO BENEFÍCIO DE APOSENTADORIA",
+    "tipo": "Data",
+    "formato": "dd/mm/aaaa",
+    "categorias": "",
+    "observacao": ""
+   },
+   {
+    "nome": "VL_APOSENTADORIA",
+    "descricao": "VALOR MENSAL DO BENEFÍCIO DE APOSENTADORIA",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "Com duas casas decimais",
+    "observacao": "Não formatar como Moeda;\nUsar a vírgula como separador de decimal"
+   },
+   {
+    "nome": "VL_CONTRIBUICAO",
+    "descricao": "VALOR MENSAL DA CONTRIBUIÇÃO PREVIDENCIÁRIA",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "Com duas casas decimais",
+    "observacao": "Não formatar como Moeda;\nUsar a vírgula como separador de decimal"
+   },
+   {
+    "nome": "VL_COMPENS_PREVID",
+    "descricao": "VALOR MENSAL DA COMPENSAÇÃO PREVIDENCIÁRIA",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "Com duas casas decimais",
+    "observacao": "Não formatar como Moeda;\nUsar a vírgula como separador de decimal"
+   },
+   {
+    "nome": "IN_PARID_SERV",
+    "descricao": "INDICADOR DE PARIDADE COM SERVIDORES ATIVOS",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "1 - Sim\n2 - Não",
+    "observacao": ""
+   },
+   {
+    "nome": "CO_CONDICAO_APOSENTADO",
+    "descricao": "CÓDIGO DA CONDIÇÃO DO APOSENTADO",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "1 - Válido\n2 - Inválido",
+    "observacao": ""
+   },
+   {
+    "nome": "NU_DEPENDENTES",
+    "descricao": "NÚMERO DE DEPENDENTES DO APOSENTADO\n(habilitados para benefício de pensão por morte)",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "Apenas números inteiros",
+    "observacao": ""
+   },
+   {
+    "nome": "NU_TEMPO_RPPS_MUN",
+    "descricao": "TEMPO DE CONTRIBUIÇÃO DO SERVIDOR PARA OUTROS \"RPPS DA ESFERA MUNICIPAL\", ANTERIOR À ADMISSÃO NO ENTE\n(em dias)",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "Apenas números inteiros",
+    "observacao": "Indicar a soma das averbações para os RPPS municipais"
+   },
+   {
+    "nome": "NU_TEMPO_RPPS_EST",
+    "descricao": "TEMPO DE CONTRIBUIÇÃO DO SERVIDOR PARA OUTROS \"RPPS DA ESFERA ESTADUAL\", ANTERIOR À ADMISSÃO NO ENTE\n(em dias)",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "Apenas números inteiros",
+    "observacao": "Indicar a soma das averbações para os RPPS estaduais"
+   },
+   {
+    "nome": "NU_TEMPO_RPPS_FED",
+    "descricao": "TEMPO DE CONTRIBUIÇÃO DO SERVIDOR PARA OUTROS \"RPPS DA ESFERA FEDERAL\", ANTERIOR À ADMISSÃO NO ENTE\n(em dias)",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "Apenas números inteiros",
+    "observacao": "Indicar a soma das averbações para o RPPS federal"
+   },
+   {
+    "nome": "IN_PREV_COMP",
+    "descricao": "INDICADOR DE PREVIDÊNCIA COMPLEMENTAR",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "1 - Sim\n2 - Não",
+    "observacao": "aposentado sujeito ao teto do RGPS em decorrência de instituição pelo ente de regime de previdência complementar"
+   },
+   {
+    "nome": "VL_TETO_ESPECIFICO",
+    "descricao": "TETO CONSTITUCIONAL REMUNERATÓRIO ESPECÍFICO (DOS SERVIDORES DO RESPECTIVO PODER)",
+    "tipo": "Numérico",
+    "formato": "Em R$",
+    "categorias": "Com duas casas decimais",
+    "observacao": "(Art. 37, XI, da CF)"
+   }
+  ],
+  "pensionistas": [
+   {
+    "nome": "NU_ANO",
+    "descricao": "ANO DE REFERÊNCIA (ANO DO EXERCÍCIO DA DRAA)",
+    "tipo": "Inteiro",
+    "formato": "",
+    "categorias": "",
+    "observacao": ""
+   },
+   {
+    "nome": "NU_MES",
+    "descricao": "MÊS DE REFERÊNCIA (MÊS DO EXERCÍCIO DA DRAA)",
+    "tipo": "Inteiro",
+    "formato": "",
+    "categorias": "",
+    "observacao": ""
+   },
+   {
+    "nome": "CO_IBGE",
+    "descricao": "CODIGO DO ENTE NO IBGE",
+    "tipo": "Inteiro",
+    "formato": "",
+    "categorias": "",
+    "observacao": "Conforme Códigos na aba \"Cod IBGE\""
+   },
+   {
+    "nome": "NO_ENTE",
+    "descricao": "NOME DO ENTE",
+    "tipo": "Caracter",
+    "formato": "",
+    "categorias": "",
+    "observacao": "Nome do Município ou Governo do Estado"
+   },
+   {
+    "nome": "SG_UF",
+    "descricao": "SIGLA DA UF DO ENTE",
+    "tipo": "Caracter",
+    "formato": "",
+    "categorias": "",
+    "observacao": "Sigla da UF do Município ou do Estado"
+   },
+   {
+    "nome": "CO_COMP_MASSA",
+    "descricao": "COMPOSIÇÃO DA MASSA",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "1 - Civil\n2 - Militar",
+    "observacao": ""
+   },
+   {
+    "nome": "CO_TIPO_FUNDO",
+    "descricao": "TIPO DE FUNDO",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "1 - Fundo em Capitalização ou sem Segregação da Massa\n2 - Fundo em Repartição (em caso de Segregação da Massa)\n3 - Beneficiário sob responsabilidade direta do ente federativo (\"Mantidos pelo Tesouro\")",
+    "observacao": ""
+   },
+   {
+    "nome": "CNPJ_ORGAO",
+    "descricao": "CNPJ do órgão ou entidade ao qual o instituidor está vinculado, conforme informado no DIPR",
+    "tipo": "Caracter",
+    "formato": "000.000.000/0000-00",
+    "categorias": "",
+    "observacao": ""
+   },
+   {
+    "nome": "NO_ORGAO",
+    "descricao": "NOME DO ÓRGÃO/ENTIDADE",
+    "tipo": "Caracter",
+    "formato": "",
+    "categorias": "",
+    "observacao": ""
+   },
+   {
+    "nome": "CO_PODER",
+    "descricao": "CÓDIGO DO PODER",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "1 - Executivo\n2 - Legislativo\n3 - Judiciário\n4 - Ministério Público\n5 - Tribunal de Contas\n6 - Defensoria Pública",
+    "observacao": ""
+   },
+   {
+    "nome": "CO_TIPO_PODER",
+    "descricao": "CÓDIGO DO TIPO DE PODER",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "1 - Administração Direta\n2 - Administração Indireta",
+    "observacao": ""
+   },
+   {
+    "nome": "CO_TIPO_INSTITUIDOR",
+    "descricao": "CÓDIGO DO TIPO DE INSTITUIDOR",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "1 - Civis - Servidores Ativos\n2 - Civis - Aposentados\n3 - Militares - Ativos\n4 - Militares - Inativos (Reserva ou Reforma)",
+    "observacao": ""
+   },
+   {
+    "nome": "ID_INSTITUIDOR_MATRICULA",
+    "descricao": "IDENTIFICAÇÃO DO SEGURADO INSTITUIDOR DA PENSÃO\n(matrícula)",
+    "tipo": "Inteiro",
+    "formato": "",
+    "categorias": "",
+    "observacao": ""
+   },
+   {
+    "nome": "ID_INSTITUIDOR_CPF",
+    "descricao": "IDENTIFICAÇÃO DO SEGURADO INSTITUIDOR DA PENSÃO\n(CPF)",
+    "tipo": "Caracter",
+    "formato": "000.000.000-00",
+    "categorias": "",
+    "observacao": ""
+   },
+   {
+    "nome": "ID_INSTITUIDOR_PIS_PASEP",
+    "descricao": "IDENTIFICAÇÃO DO SEGURADO INSTITUIDOR DA PENSÃO\n(PIS-PASEP)",
+    "tipo": "Caracter",
+    "formato": "000.00000.00-0",
+    "categorias": "",
+    "observacao": ""
+   },
+   {
+    "nome": "CO_SEXO_INSTITUIDOR",
+    "descricao": "CÓDIGO DO SEXO DO INSTITUIDOR DA PENSÃO",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "1 - Feminino\n2 - Masculino",
+    "observacao": ""
+   },
+   {
+    "nome": "DT_NASC_INSTITUIDOR",
+    "descricao": "DATA DE NASCIMENTO DO INSTITUIDOR DA PENSÃO",
+    "tipo": "Data",
+    "formato": "dd/mm/aaaa",
+    "categorias": "",
+    "observacao": ""
+   },
+   {
+    "nome": "DT_OBITO_INSTITUIDOR",
+    "descricao": "DATA DO FALECIMENTO DO INSTITUIDOR DA PENSÃO",
+    "tipo": "Data",
+    "formato": "dd/mm/aaaa",
+    "categorias": "",
+    "observacao": ""
+   },
+   {
+    "nome": "ID_PENSIONISTA_MATRICULA",
+    "descricao": "IDENTIFICAÇÃO DO PENSIONISTA\n(MATRICULA)",
+    "tipo": "Caracter",
+    "formato": "000.000.000-00",
+    "categorias": "",
+    "observacao": ""
+   },
+   {
+    "nome": "ID_PENSIONISTA_CPF",
+    "descricao": "IDENTIFICAÇÃO DO PENSIONISTA\n(CPF)",
+    "tipo": "Caracter",
+    "formato": "000.000.000-00",
+    "categorias": "",
+    "observacao": ""
+   },
+   {
+    "nome": "CO_SEXO_PENSIONISTA",
+    "descricao": "CÓDIGO DO SEXO DO PENSIONISTA",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "1 - Feminino\n2 - Masculino",
+    "observacao": ""
+   },
+   {
+    "nome": "DT_NASC_PENSIONISTA",
+    "descricao": "DATA DE NASCIMENTO DO PENSIONISTA",
+    "tipo": "Data",
+    "formato": "dd/mm/aaaa",
+    "categorias": "",
+    "observacao": ""
+   },
+   {
+    "nome": "CO_TIPO_RELACAO",
+    "descricao": "TIPO DE RELAÇÃO DO PENSIONISTA COM O SEGURADO INSTITUIDOR",
+    "tipo": "Inteiro",
+    "formato": "",
+    "categorias": "1 - Cônjuge, a companheira, o companheiro\n2 - Filho não emancipado, menor de 21 anos ou outra idade legislação RPPS\n3 - Filho inválido ou com deficiência\n4 - Pais\n5 - Irmão não emancipado, menor de 21 anos ou inválido ou com deficiência\n6 - Outros",
+    "observacao": ""
+   },
+   {
+    "nome": "DT_INICIO_PENSAO",
+    "descricao": "DATA DE INÍCIO DO BENEFÍCIO DE PENSÃO",
+    "tipo": "Data",
+    "formato": "dd/mm/aaaa",
+    "categorias": "",
+    "observacao": ""
+   },
+   {
+    "nome": "VL_BENEF_PENSAO",
+    "descricao": "VALOR MENSAL DO BENEFÍCIO DE PENSÃO",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "Com duas casas decimais",
+    "observacao": "Não formatar como Moeda;\nUsar a vírgula como separador de decimal"
+   },
+   {
+    "nome": "VL_TOT_PENSAO",
+    "descricao": "VALOR TOTAL DA PENSÃO",
+    "tipo": "Numérico",
+    "formato": "R$",
+    "categorias": "Com duas casas decimais",
+    "observacao": "somatorio dos valores individuais das cotas, em R$"
+   },
+   {
+    "nome": "VL_PCT_QUOTA",
+    "descricao": "VALOR PERCENTUAL DA QUOTA RECEBIDA PELO PENSIONISTA",
+    "tipo": "Numérico",
+    "formato": "%",
+    "categorias": "Com duas casas decimais",
+    "observacao": ""
+   },
+   {
+    "nome": "VL_CONTRIBUICAO",
+    "descricao": "VALOR MENSAL DA CONTRIBUÇÃO PREVIDENCIÁRIA",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "Com duas casas decimais",
+    "observacao": "Não formatar como Moeda;\nUsar a vírgula como separador de decimal"
+   },
+   {
+    "nome": "VL_COMPENS_PREVID",
+    "descricao": "VALOR MENSAL DA COMPENSAÇÃO PREVIDENCIÁRIA",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "Com duas casas decimais",
+    "observacao": "Não formatar como Moeda;\nUsar a vírgula como separador de decimal"
+   },
+   {
+    "nome": "IN_PARID_SERV",
+    "descricao": "INDICADOR DE PARIDADE COM SERVIDORES ATIVOS",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "1- Sim\n2- Não",
+    "observacao": ""
+   },
+   {
+    "nome": "CO_CONDICAO",
+    "descricao": "CONDIÇÃO DO PENSIONISTA",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "1 - Válido\n2 -Inválido",
+    "observacao": ""
+   },
+   {
+    "nome": "CO_DURACAO",
+    "descricao": "DURAÇÃO DO BENEFÍCIO",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "1 - Vitalício\n2 - Temporário",
+    "observacao": ""
+   },
+   {
+    "nome": "NU_TEMPO_DURACAO",
+    "descricao": "TEMPO DE DURAÇÃO DO BENEFÍCIO",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "",
+    "observacao": "em anos, se temporário"
+   },
+   {
+    "nome": "IN_PREV_COMP",
+    "descricao": "INDICADOR DE PREVIDÊNCIA COMPLEMENTAR",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "1 - Sim\n2 - Não",
+    "observacao": "aposentado sujeito ao teto do RGPS em decorrência de instituição pelo ente de regime de previdência complementar"
+   },
+   {
+    "nome": "VL_TETO_ESPECIFICO",
+    "descricao": "TETO CONSTITUCIONAL REMUNERATÓRIO ESPECÍFICO (DOS SERVIDORES DO RESPECTIVO PODER)",
+    "tipo": "Numérico",
+    "formato": "Em R$",
+    "categorias": "Com duas casas decimais",
+    "observacao": "(Art. 37, XI, da CF)"
+   }
+  ],
+  "dependentes": [
+   {
+    "nome": "NU_ANO",
+    "descricao": "ANO DE REFERÊNCIA (ANO DO EXERCÍCIO DA DRAA)",
+    "tipo": "Inteiro",
+    "formato": "",
+    "categorias": "",
+    "observacao": ""
+   },
+   {
+    "nome": "NU_MES",
+    "descricao": "MÊS DE REFERÊNCIA (MÊS DO EXERCÍCIO DA DRAA)",
+    "tipo": "Inteiro",
+    "formato": "",
+    "categorias": "",
+    "observacao": ""
+   },
+   {
+    "nome": "CO_IBGE",
+    "descricao": "CODIGO DO ENTE NO IBGE",
+    "tipo": "Inteiro",
+    "formato": "",
+    "categorias": "",
+    "observacao": "Conforme Códigos na aba \"Cod IBGE\""
+   },
+   {
+    "nome": "NO_ENTE",
+    "descricao": "NOME DO ENTE",
+    "tipo": "Caracter",
+    "formato": "",
+    "categorias": "",
+    "observacao": "Nome do Município ou Governo do Estado"
+   },
+   {
+    "nome": "SG_UF",
+    "descricao": "SIGLA DA UF DO ENTE",
+    "tipo": "Caracter",
+    "formato": "",
+    "categorias": "",
+    "observacao": "Sigla da UF do Município ou do Estado"
+   },
+   {
+    "nome": "CO_COMP_MASSA",
+    "descricao": "COMPOSIÇÃO DA MASSA",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "1 - Civil\n2 - Militar",
+    "observacao": ""
+   },
+   {
+    "nome": "CO_TIPO_FUNDO",
+    "descricao": "TIPO DE FUNDO",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "1 - Fundo em Capitalização ou sem Segregação da Massa\n2 - Fundo em Repartição (em caso de Segregação da Massa)\n3 - Beneficiário sob responsabilidade direta do ente federativo (\"Mantidos pelo Tesouro\")",
+    "observacao": ""
+   },
+   {
+    "nome": "CNPJ_ORGAO",
+    "descricao": "CNPJ do órgão ou entidade ao qual o instituidor está vinculado, conforme informado no DIPR",
+    "tipo": "Caracter",
+    "formato": "000.000.000/0000-00",
+    "categorias": "",
+    "observacao": ""
+   },
+   {
+    "nome": "NO_ORGAO",
+    "descricao": "NOME DO ÓRGÃO/ENTIDADE",
+    "tipo": "Caracter",
+    "formato": "",
+    "categorias": "",
+    "observacao": ""
+   },
+   {
+    "nome": "CO_PODER",
+    "descricao": "CÓDIGO DO PODER",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "1 - Executivo\n2 - Legislativo\n3 - Judiciário\n4 - Ministério Público\n5 - Tribunal de Contas\n6 - Defensoria Pública",
+    "observacao": ""
+   },
+   {
+    "nome": "CO_TIPO_PODER",
+    "descricao": "CÓDIGO DO TIPO DE PODER",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "1 - Administração Direta\n2 - Administração Indireta",
+    "observacao": ""
+   },
+   {
+    "nome": "ID_SEGURADO_MATRICULA",
+    "descricao": "MATRÍCULA DO SEGURADO SERVIDOR (POSSÍVEL INSTITUIDOR DE PENSÃO)\n(matrícula)",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "",
+    "observacao": "Número da matrícula do servidor ou aposentado. Preencher sem traços ou pontos."
+   },
+   {
+    "nome": "ID_SEGURADO_CPF",
+    "descricao": "CPF DO SEGURADO SERVIDOR (POSSÍVEL INSTITUIDOR DE PENSÃO)\n(CPF)",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "",
+    "observacao": "Número do CPF do servidor ou aposentado. Preencher sem traços ou pontos. Não há necessidade de zero à esquerda."
+   },
+   {
+    "nome": "ID_SEGURADO_PIS_PASEP",
+    "descricao": "PASEP DO SEGURADO SERVIDOR (POSSÍVEL INSTITUIDOR DE PENSÃO)\n(PIS-PASEP)",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "",
+    "observacao": "Número de identificação (PASEP/PIS/NIT) do servidor ou aposentado. Preencher sem traços ou pontos."
+   },
+   {
+    "nome": "CO_SEXO_SEGURADO",
+    "descricao": "SEXO DO SEGURADO SERVIDOR (POSSÍVEL INSTITUIDOR DE PENSÃO)",
+    "tipo": "Texto",
+    "formato": "",
+    "categorias": "1 - Feminino\n2 - Masculino",
+    "observacao": ""
+   },
+   {
+    "nome": "ID_DEPENDENTE",
+    "descricao": "IDENTIFICADOR ÚNICO DO DEPENDENTE",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "",
+    "observacao": "Identificador do dependente para ser usado como registro único na base de dados unificada para a avaliação atuarial. Valor único que identifique o registro do dependente e, pode ser utilizado aquele constante do sistema de dados cadastrais já utilizado pelo órgão, desde que elimine possíveis duplicidades de registro."
+   },
+   {
+    "nome": "ID_DEPENDENTE_CPF",
+    "descricao": "CPF DO DEPENDENTE\n(CPF)",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "",
+    "observacao": "Número do CPF do dependente. Preencher sem traços ou pontos. Não há necessidade de zero à esquerda."
+   },
+   {
+    "nome": "DT_NASC_DEPENDENTE",
+    "descricao": "DATA DE NASCIMENTO DO DEPENDENTE",
+    "tipo": "Data",
+    "formato": "dd/mm/aaaa",
+    "categorias": "",
+    "observacao": "Data de nascimento no formato dd/mm/aaaa."
+   },
+   {
+    "nome": "CO_SEXO_DEPENDENTE",
+    "descricao": "SEXO DO DEPENDENTE",
+    "tipo": "Texto",
+    "formato": "",
+    "categorias": "1 - Feminino\n2 - Masculino",
+    "observacao": ""
+   },
+   {
+    "nome": "CO_CONDICAO_DEPENDENTE",
+    "descricao": "CONDIÇÃO DO DEPENDENTE",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "1 - Válido\n2 - Inválido",
+    "observacao": "Indica a atual condição do dependente (válido ou inválido)."
+   },
+   {
+    "nome": "CO_TIPO_DEPENDECIA",
+    "descricao": "TIPO DE DEPENDÊNCIA DO DEPENDENTE COM O SEGURADO SERVIDOR (POSSÍVEL INSTITUIDOR DE PENSÃO)",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "1 CÔNJUGUE\n2 COMPANHEIRO(A)\n3 FILHO(A) MENOR NAO EMANCIPADO(A)\n4 FILHO(A) INVÁLIDO(A)\n5 PAI(MÃE) COM DEPENDÊNCIA ECONÔMICA\n6 ENTEADO(A) MENOR NAO EMANCIPADO(A) COM DEPENDÊNCIA ECONÔMICA\n7 ENTEADO(A) INVÁLIDO(A) COM DEPENDÊNCIA ECONÔMICA\n8 IRMÃO(A) MENOR NAO EMANCIPADO(A) COM DEPENDÊNCIA ECONÔMICA\n9 IRMÃO(A) INVÁLIDO(A) COM DEPENDÊNCIA ECONÔMICA\n10 MENOR TUTELADO\n11 NETO\n12 EX-CÔNJUGE QUE RECEBA PENSÃO DE ALIMENTOS\n99 OUTROS",
+    "observacao": "Tipo da dependência entre o dependente e o servidor ativo ou aposentadode acordo com a tabela (códigos 1 a 99)"
+   }
+  ],
+  "servidores_baixas": [
+   {
+    "nome": "NU_ANO",
+    "descricao": "ANO DE REFERÊNCIA (ANO DO EXERCÍCIO DA DRAA)",
+    "tipo": "Inteiro",
+    "formato": "",
+    "categorias": "",
+    "observacao": ""
+   },
+   {
+    "nome": "NU_MES",
+    "descricao": "MÊS DE REFERÊNCIA (MÊS DO EXERCÍCIO DA DRAA)",
+    "tipo": "Inteiro",
+    "formato": "",
+    "categorias": "",
+    "observacao": ""
+   },
+   {
+    "nome": "CO_IBGE",
+    "descricao": "CODIGO DO ENTE NO IBGE",
+    "tipo": "Inteiro",
+    "formato": "",
+    "categorias": "",
+    "observacao": "Conforme Códigos na aba \"Cod IBGE\""
+   },
+   {
+    "nome": "NO_ENTE",
+    "descricao": "NOME DO ENTE",
+    "tipo": "Caracter",
+    "formato": "",
+    "categorias": "",
+    "observacao": "Nome do Município ou Governo do Estado"
+   },
+   {
+    "nome": "SG_UF",
+    "descricao": "SIGLA DA UF DO ENTE",
+    "tipo": "Caracter",
+    "formato": "",
+    "categorias": "",
+    "observacao": "Sigla da UF do Município ou do Estado"
+   },
+   {
+    "nome": "CO_COMP_MASSA",
+    "descricao": "COMPOSIÇÃO DA MASSA",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "1 - Civil\n2 - Militar",
+    "observacao": ""
+   },
+   {
+    "nome": "CO_TIPO_FUNDO",
+    "descricao": "TIPO DE FUNDO",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "1 - Fundo em Capitalização ou sem Segregação da Massa\n2 - Fundo em Repartição (em caso de Segregação da Massa)\n3 - Beneficiário sob responsabilidade direta do ente federativo (\"Mantidos pelo Tesouro\")",
+    "observacao": ""
+   },
+   {
+    "nome": "NU_CNPJ_ORGAO",
+    "descricao": "CNPJ do órgão ou entidade ao qual o servidor está vinculado, conforme informado no DIPR",
+    "tipo": "Caracter",
+    "formato": "000.000.000/0000-00",
+    "categorias": "",
+    "observacao": ""
+   },
+   {
+    "nome": "NO_ORGAO",
+    "descricao": "NOME DO ÓRGÃO/ENTIDADE",
+    "tipo": "Caracter",
+    "formato": "",
+    "categorias": "",
+    "observacao": ""
+   },
+   {
+    "nome": "CO_PODER",
+    "descricao": "CÓDIGO DO PODER",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "1 - Executivo\n2 - Legislativo\n3 - Judiciário\n4 - Ministério Público\n5 - Tribunal de Contas\n6 - Defensoria Pública",
+    "observacao": ""
+   },
+   {
+    "nome": "CO_TIPO_PODER",
+    "descricao": "CÓDIGO DO TIPO DE PODER",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "1 - Administração Direta\n2 - Administração Indireta",
+    "observacao": ""
+   },
+   {
+    "nome": "CO_TIPO_POPULACAO",
+    "descricao": "CÓDIGO DO TIPO DE POPULAÇÃO COBERTA",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "1 - Servidores Ativos\n2 - Servidores Ativos Iminentes\n3 - Outros - Ativos\n8 - Militares em atividade",
+    "observacao": ""
+   },
+   {
+    "nome": "CO_TIPO_CARGO",
+    "descricao": "CÓDIGO DO TIPO DE CARGO",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "Para Civis:\n1 - Magistrados, Membros do Min. Público ou de Tribunal de Contas\n2 - Professores da Educ. Infantil e do Ensino Fund. e Médio\n3 - Professores do Ensino Superior\n4 - Policiais Civis (Federais, Distritais ou Estaduais)\n5 - Agente Penitenciário\n6 - Guarda Municipal\n7 - Demais Servidores\nPara Militares:\n8 - Militares",
+    "observacao": ""
+   },
+   {
+    "nome": "CO_CRITERIO_ELEGIBILIDADE",
+    "descricao": "CÓDIGO DO CRITÉRIO DE ELEGIBILIDADE",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "Para Civis:\n1 - Sem critério diferenciado para aposentadoria\n2 - Com deficiência (Art. 40, § 4º, inc. I, CF)\n3 - Critério para aposentadoria como professor\n4 - Exerce atividade de risco (Art. 40, § 4º, inc. II, CF)\n5 - Exerce atividade prejudiciais à saúde ou integridade física (Art. 40, § 4º, inc. III, CF)\nPara Militares:\n8 - Militares em Atividade",
+    "observacao": ""
+   },
+   {
+    "nome": "ID_SERVIDOR_MATRICULA",
+    "descricao": "IDENTIFICAÇÃO DO SERVIDOR (matrícula)",
+    "tipo": "Inteiro",
+    "formato": "",
+    "categorias": "",
+    "observacao": ""
+   },
+   {
+    "nome": "ID_SERVIDOR_CPF",
+    "descricao": "IDENTIFICAÇÃO DO SERVIDOR\n(CPF)",
+    "tipo": "Caracter",
+    "formato": "000.000.000-00",
+    "categorias": "",
+    "observacao": ""
+   },
+   {
+    "nome": "ID_SERVIDOR_PIS_PASEP",
+    "descricao": "IDENTIFICAÇÃO DO SERVIDOR\n(PIS-PASEP)",
+    "tipo": "Caracter",
+    "formato": "000.00000.00-0",
+    "categorias": "",
+    "observacao": ""
+   },
+   {
+    "nome": "CO_SEXO_SERVIDOR",
+    "descricao": "CÓDIGO DO SEXO DO SERVIDOR",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "1 - Feminino\n2 - Masculino",
+    "observacao": ""
+   },
+   {
+    "nome": "CO_EST_CIVIL_SERVIDOR",
+    "descricao": "CÓDIGO DO ESTADO CIVIL DO SERVIDOR",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "1 - solteiro (a)\n2 - casado (a)\n3 - viúvo (a)\n4 - separado (a) judicialmente\n5 - divorciado (a)\n6 - união estável\n9 - outros",
+    "observacao": ""
+   },
+   {
+    "nome": "DT_NASC_SERVIDOR",
+    "descricao": "DATA DE NASCIMENTO DO SERVIDOR",
+    "tipo": "Data",
+    "formato": "dd/mm/aaaa",
+    "categorias": "",
+    "observacao": ""
+   },
+   {
+    "nome": "CO_SITUACAO",
+    "descricao": "CÓDIGO DA SITUAÇÃO DO SERVIDOR",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "SITUAÇÃO (exonerações, demissões ou falecimentos ocorridos entre a competência da base cadastral utilizada na avaliação atuarial do ano anterior e a do ano atual)\n12 - Exonerado/Demitido\n13 - Falecido",
+    "observacao": "OBS: Servidor afastado por auxílio-doença e/ou salário-maternidade integra a categoria \"Em Exercício\" e deve ser informado normalmente"
+   },
+   {
+    "nome": "DT_SITUACAO",
+    "descricao": "DATA DA SITUAÇÃO",
+    "tipo": "Data",
+    "formato": "dd/mm/aaaa",
+    "categorias": "",
+    "observacao": "Data de ocorrência do Evento (exoneração/demissão ou falecimento)"
+   },
+   {
+    "nome": "CO_TIPO_VINCULO",
+    "descricao": "CÓDIGO DO TIPO DE VÍNCULO",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "1 - Servidor Efetivo\n2 - Servidor Efetivo Ocupante de Cargo em Comissão\n3 - Estável\n4 - Outros",
+    "observacao": ""
+   },
+   {
+    "nome": "DT_ING_SERV_PUB",
+    "descricao": "DATA DE INGRESSO NO SERVIÇO PÚBLICO",
+    "tipo": "Data",
+    "formato": "dd/mm/aaaa",
+    "categorias": "",
+    "observacao": ""
+   },
+   {
+    "nome": "DT_ING_ENTE",
+    "descricao": "DATA DE INGRESSO NO ENTE",
+    "tipo": "Data",
+    "formato": "dd/mm/aaaa",
+    "categorias": "",
+    "observacao": ""
+   },
+   {
+    "nome": "DT_ING_CARREIRA",
+    "descricao": "DATA DE INGRESSO NA CARREIRA ATUAL",
+    "tipo": "Data",
+    "formato": "dd/mm/aaaa",
+    "categorias": "",
+    "observacao": ""
+   },
+   {
+    "nome": "NO_CARREIRA",
+    "descricao": "NOME DA CARREIRA ATUAL",
+    "tipo": "Caracter",
+    "formato": "",
+    "categorias": "",
+    "observacao": ""
+   },
+   {
+    "nome": "DT_ING_CARGO",
+    "descricao": "DATA DE INÍCIO DE EXERCÍCIO NO CARGO ATUAL",
+    "tipo": "Data",
+    "formato": "dd/mm/aaaa",
+    "categorias": "",
+    "observacao": ""
+   },
+   {
+    "nome": "NO_CARGO",
+    "descricao": "NOME DO CARGO ATUAL",
+    "tipo": "Caracter",
+    "formato": "",
+    "categorias": "",
+    "observacao": ""
+   },
+   {
+    "nome": "VL_BASE_CALCULO",
+    "descricao": "BASE DE CÁLCULO MENSAL DO SERVIDOR",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "Com duas casas decimais",
+    "observacao": "- Valor Bruto da Remuneração de Contribuição;\n- Não formatar como Moeda;\n- Usar a vírgula como separador de decimal"
+   },
+   {
+    "nome": "VL_REMUNERACAO",
+    "descricao": "REMUNERAÇÃO MENSAL TOTAL DO SERVIDOR",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "Com duas casas decimais",
+    "observacao": "- Valor Bruto Total da Remuneração;\n- Não formatar como Moeda;\n- Usar a vírgula como separador de decimal"
+   },
+   {
+    "nome": "VL_CONTRIBUICAO",
+    "descricao": "CONTRIBUIÇÃO MENSAL",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "Com duas casas decimais",
+    "observacao": "- valor da contribuição mensal do segurado para o RPPS na competência da base de dados da avaliação atuarial)\n(em R$)"
+   },
+   {
+    "nome": "NU_TEMPO_RGPS",
+    "descricao": "TEMPO DE CONTRIBUIÇÃO DO SERVIDOR PARA O RGPS, ANTERIOR À ADMISSÃO NO ENTE\n(em dias)",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "Apenas números inteiros",
+    "observacao": ""
+   },
+   {
+    "nome": "NU_TEMPO_RPPS_MUN",
+    "descricao": "TEMPO DE CONTRIBUIÇÃO DO SERVIDOR PARA OUTROS \"RPPS DA ESFERA MUNICIPAL\", ANTERIOR À ADMISSÃO NO ENTE\n(em dias)",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "Apenas números inteiros",
+    "observacao": "Indicar a soma das averbações para os RPPS municipais"
+   },
+   {
+    "nome": "NU_TEMPO_RPPS_EST",
+    "descricao": "TEMPO DE CONTRIBUIÇÃO DO SERVIDOR PARA OUTROS \"RPPS DA ESFERA ESTADUAL\", ANTERIOR À ADMISSÃO NO ENTE\n(em dias)",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "Apenas números inteiros",
+    "observacao": "Indicar a soma das averbações para os RPPS estaduais"
+   },
+   {
+    "nome": "NU_TEMPO_RPPS_FED",
+    "descricao": "TEMPO DE CONTRIBUIÇÃO DO SERVIDOR PARA OUTROS \"RPPS DA ESFERA FEDERAL\", ANTERIOR À ADMISSÃO NO ENTE\n(em dias)",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "Apenas números inteiros",
+    "observacao": "Indicar a soma das averbações para o RPPS federal"
+   },
+   {
+    "nome": "NU_DEPENDENTES",
+    "descricao": "NÚMERO DE DEPENDENTES DO SERVIDOR\n(Incluindo o cônjuge)",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "Apenas números inteiros",
+    "observacao": ""
+   },
+   {
+    "nome": "IN_ABONO_PERMANENCIA",
+    "descricao": "INDICADOR DE RECEBIMENTO DE ABONO DE PERMANÊNCIA",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "1 - Sim\n2 - Não",
+    "observacao": ""
+   },
+   {
+    "nome": "DT_INICIO_ABONO",
+    "descricao": "DATA DE INÍCIO DE RECEBIMENTO DO ABONO DE PERMANÊNCIA",
+    "tipo": "Data",
+    "formato": "dd/mm/aaaa",
+    "categorias": "",
+    "observacao": ""
+   },
+   {
+    "nome": "IN_PREV_COMP",
+    "descricao": "INDICADOR DE PREVIDÊNCIA COMPLEMENTAR",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "1 - Sim\n2 - Não",
+    "observacao": "servidor sujeito ao teto do RGPS em decorrência de instituição pelo ente de regime de previdência complementar"
+   },
+   {
+    "nome": "VL_TETO_ESPECIFICO",
+    "descricao": "TETO CONSTITUCIONAL REMUNERATÓRIO ESPECÍFICO (DOS SERVIDORES DO RESPECTIVO PODER)",
+    "tipo": "Numérico",
+    "formato": "Em R$",
+    "categorias": "Com duas casas decimais",
+    "observacao": "(Art. 37, XI, da CF)"
+   }
+  ],
+  "aposentados_baixas": [
+   {
+    "nome": "NU_ANO",
+    "descricao": "ANO DE REFERÊNCIA (ANO DO EXERCÍCIO DA DRAA)",
+    "tipo": "Inteiro",
+    "formato": "",
+    "categorias": "",
+    "observacao": ""
+   },
+   {
+    "nome": "NU_MES",
+    "descricao": "MÊS DE REFERÊNCIA (MÊS DO EXERCÍCIO DA DRAA)",
+    "tipo": "Inteiro",
+    "formato": "",
+    "categorias": "",
+    "observacao": ""
+   },
+   {
+    "nome": "CO_IBGE",
+    "descricao": "CODIGO DO ENTE NO IBGE",
+    "tipo": "Inteiro",
+    "formato": "",
+    "categorias": "",
+    "observacao": "Conforme Códigos na aba \"Cod IBGE\""
+   },
+   {
+    "nome": "NO_ENTE",
+    "descricao": "NOME DO ENTE",
+    "tipo": "Caracter",
+    "formato": "",
+    "categorias": "",
+    "observacao": "Nome do Município ou Governo do Estado"
+   },
+   {
+    "nome": "SG_UF",
+    "descricao": "SIGLA DA UF DO ENTE",
+    "tipo": "Caracter",
+    "formato": "",
+    "categorias": "",
+    "observacao": "Sigla da UF do Município ou do Estado"
+   },
+   {
+    "nome": "CO_COMP_MASSA",
+    "descricao": "COMPOSIÇÃO DA MASSA",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "1 - Civil\n2 - Militar",
+    "observacao": ""
+   },
+   {
+    "nome": "CO_TIPO_FUNDO",
+    "descricao": "TIPO DE FUNDO",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "1 - Fundo em Capitalização ou sem Segregação da Massa\n2 - Fundo em Repartição (em caso de Segregação da Massa)\n3 - Beneficiário sob responsabilidade direta do ente federativo (\"Mantidos pelo Tesouro\")",
+    "observacao": ""
+   },
+   {
+    "nome": "CNPJ_ORGAO",
+    "descricao": "CNPJ do órgão ou entidade ao qual o aposentado está vinculado, conforme informado no DIPR",
+    "tipo": "Caracter",
+    "formato": "000.000.000/0000-00",
+    "categorias": "",
+    "observacao": ""
+   },
+   {
+    "nome": "NO_ORGAO",
+    "descricao": "NOME DO ÓRGÃO/ENTIDADE",
+    "tipo": "Caracter",
+    "formato": "",
+    "categorias": "",
+    "observacao": ""
+   },
+   {
+    "nome": "CO_PODER",
+    "descricao": "CÓDIGO DO PODER",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "1 - Executivo\n2 - Legislativo\n3 - Judiciário\n4 - Ministério Público\n5 - Tribunal de Contas\n6 - Defensoria Pública",
+    "observacao": ""
+   },
+   {
+    "nome": "CO_TIPO_PODER",
+    "descricao": "CÓDIGO DO TIPO DE PODER",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "1 - Administração Direta\n2 - Administração Indireta",
+    "observacao": ""
+   },
+   {
+    "nome": "CO_TIPO_POPULACAO",
+    "descricao": "CÓDIGO DO TIPO DE POPULAÇÃO COBERTA",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "4 - Civis aposentados\n9 - Militares inativos\nComentário: dando continuidade a numeração da População Coberta (A) dos Ativos, para não misturar ativo com aposentado e pensionista)",
+    "observacao": ""
+   },
+   {
+    "nome": "CO_TIPO_CARGO",
+    "descricao": "CÓDIGO DO TIPO DE CARGO",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "Para Civis:\n1 - Magistrados, Membros do Min. Público ou de Tribunal de Contas\n2 - Professores da Educ. Infantil e do Ensino Fund. e Médio\n3 - Professores do Ensino Superior\n4 - Policiais Civis (Federais, Distritais ou Estaduais)\n5 - Agente Penitenciário\n6 - Guarda Municipal\n7 - Demais Servidores\nPara Militares:\n8 - Militares",
+    "observacao": ""
+   },
+   {
+    "nome": "CO_TIPO_APOSENTADORIA",
+    "descricao": "CÓDIGO DO TIPO DE APOSENTADORIA",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "Para Civis:\n1 - Aposentadoria por Idade\n2 - Aposentadoria por Tempo de Contribuição\n3 - Aposentadoria Compulsória\n4 - Aposentadoria por Invalidez\n5 - Aposentadoria como Professor\n6 - Aposentadoria Especial - atividade de risco (Art. 40, § 4º, inc. II, CF)\n7 - Aposentadoria Especial - atividade prejudiciais à saúde ou integridade física (Art. 40, § 4º, inc. III, CF)\nPara Militares Inativos:\n9 - Militares Inativos - Reserva Remunerada\n10 - Militares Inativos - Reforma",
+    "observacao": ""
+   },
+   {
+    "nome": "ID_APOSENTADO_MATRICULA",
+    "descricao": "IDENTIFICAÇÃO DO APOSENTADO\n(matrícula)",
+    "tipo": "Inteiro",
+    "formato": "",
+    "categorias": "",
+    "observacao": ""
+   },
+   {
+    "nome": "ID_APOSENTADO_CPF",
+    "descricao": "IDENTIFICAÇÃO DO APOSENTADO\n(CPF)",
+    "tipo": "Caracter",
+    "formato": "000.000.000-00",
+    "categorias": "",
+    "observacao": ""
+   },
+   {
+    "nome": "ID_APOSENT_PIS_PASEP",
+    "descricao": "IDENTIFICAÇÃO DO APOSENTADO\n(PIS-PASEP)",
+    "tipo": "Caracter",
+    "formato": "000.00000.00-0",
+    "categorias": "",
+    "observacao": ""
+   },
+   {
+    "nome": "CO_SEXO_APOSENTADO",
+    "descricao": "CÓDIGO DO SEXO DO APOSENTADO",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "1 - Feminino\n2 - Masculino",
+    "observacao": ""
+   },
+   {
+    "nome": "CO_EST_CIVIL_APOSENTADO",
+    "descricao": "CÓDIGO DO ESTADO CIVIL DO APOSENTADO",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "1 - solteiro (a)\n2 - casado (a)\n3 - viúvo (a)\n4 - separado (a) judicialmente\n5 - divorciado (a)\n6 - união estável\n9 - outros",
+    "observacao": ""
+   },
+   {
+    "nome": "DT_NASC_APOSENTADO",
+    "descricao": "DATA DE NASCIMENTO DO APOSENTADO",
+    "tipo": "Data",
+    "formato": "dd/mm/aaaa",
+    "categorias": "",
+    "observacao": ""
+   },
+   {
+    "nome": "CO_SITUACAO",
+    "descricao": "",
+    "tipo": "",
+    "formato": "",
+    "categorias": "12 - Falecido\n13 - Benefício cessado por processo administrativo ou judicial",
+    "observacao": "benefícios cessados por falecimentos ou decisões administrativas/judiciais ocorridas entre a competência da base cadastral utilizada na avaliação atuarial do ano anterior e a do ano atual"
+   },
+   {
+    "nome": "DT_SITUACAO",
+    "descricao": "DATA DA SITUAÇÃO",
+    "tipo": "Data",
+    "formato": "dd/mm/aaaa",
+    "categorias": "",
+    "observacao": "Data de ocorrência do Evento (Falecimento ou Benefício cessado por processo administrativo ou judicial)"
+   },
+   {
+    "nome": "DT_ING_SERV_PUB",
+    "descricao": "DATA DE INGRESSO NO SERVIÇO PÚBLICO",
+    "tipo": "Data",
+    "formato": "dd/mm/aaaa",
+    "categorias": "",
+    "observacao": ""
+   },
+   {
+    "nome": "DT_ING_ENTE",
+    "descricao": "DATA DE INGRESSO NO ENTE",
+    "tipo": "Data",
+    "formato": "dd/mm/aaaa",
+    "categorias": "",
+    "observacao": ""
+   },
+   {
+    "nome": "DT_INICIO_APOSENTADORIA",
+    "descricao": "DATA DE INÍCIO DO BENEFÍCIO DE APOSENTADORIA",
+    "tipo": "Data",
+    "formato": "dd/mm/aaaa",
+    "categorias": "",
+    "observacao": ""
+   },
+   {
+    "nome": "VL_APOSENTADORIA",
+    "descricao": "VALOR MENSAL DO BENEFÍCIO DE APOSENTADORIA",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "Com duas casas decimais",
+    "observacao": "Não formatar como Moeda;\nUsar a vírgula como separador de decimal"
+   },
+   {
+    "nome": "VL_CONTRIBUICAO",
+    "descricao": "VALOR MENSAL DA CONTRIBUIÇÃO PREVIDENCIÁRIA",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "Com duas casas decimais",
+    "observacao": "Não formatar como Moeda;\nUsar a vírgula como separador de decimal"
+   },
+   {
+    "nome": "VL_COMPENS_PREVID",
+    "descricao": "VALOR MENSAL DA COMPENSAÇÃO PREVIDENCIÁRIA",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "Com duas casas decimais",
+    "observacao": "Não formatar como Moeda;\nUsar a vírgula como separador de decimal"
+   },
+   {
+    "nome": "IN_PARID_SERV",
+    "descricao": "INDICADOR DE PARIDADE COM SERVIDORES ATIVOS",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "1 - Sim\n2 - Não",
+    "observacao": ""
+   },
+   {
+    "nome": "CO_CONDICAO_APOSENTADO",
+    "descricao": "CÓDIGO DA CONDIÇÃO DO APOSENTADO",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "1 - Válido\n2 - Inválido",
+    "observacao": ""
+   },
+   {
+    "nome": "IN_PREV_COMP",
+    "descricao": "INDICADOR DE PREVIDÊNCIA COMPLEMENTAR",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "1 - Sim\n2 - Não",
+    "observacao": "aposentado sujeito ao teto do RGPS em decorrência de instituição pelo ente de regime de previdência complementar"
+   },
+   {
+    "nome": "VL_TETO_ESPECIFICO",
+    "descricao": "TETO CONSTITUCIONAL REMUNERATÓRIO ESPECÍFICO (DOS SERVIDORES DO RESPECTIVO PODER)",
+    "tipo": "Numérico",
+    "formato": "Em R$",
+    "categorias": "Com duas casas decimais",
+    "observacao": "(Art. 37, XI, da CF)"
+   },
+   {
+    "nome": "NU_DEPENDENTES",
+    "descricao": "NÚMERO DE DEPENDENTES DO APOSENTADO\n(habilitados para benefício de pensão por morte)",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "Apenas números inteiros",
+    "observacao": ""
+   }
+  ],
+  "pensionistas_baixas": [
+   {
+    "nome": "NU_ANO",
+    "descricao": "ANO DE REFERÊNCIA (ANO DO EXERCÍCIO DA DRAA)",
+    "tipo": "Inteiro",
+    "formato": "",
+    "categorias": "",
+    "observacao": ""
+   },
+   {
+    "nome": "NU_MES",
+    "descricao": "MÊS DE REFERÊNCIA (MÊS DO EXERCÍCIO DA DRAA)",
+    "tipo": "Inteiro",
+    "formato": "",
+    "categorias": "",
+    "observacao": ""
+   },
+   {
+    "nome": "CO_IBGE",
+    "descricao": "CODIGO DO ENTE NO IBGE",
+    "tipo": "Inteiro",
+    "formato": "",
+    "categorias": "",
+    "observacao": "Conforme Códigos na aba \"Cod IBGE\""
+   },
+   {
+    "nome": "NO_ENTE",
+    "descricao": "NOME DO ENTE",
+    "tipo": "Caracter",
+    "formato": "",
+    "categorias": "",
+    "observacao": "Nome do Município ou Governo do Estado"
+   },
+   {
+    "nome": "SG_UF",
+    "descricao": "SIGLA DA UF DO ENTE",
+    "tipo": "Caracter",
+    "formato": "",
+    "categorias": "",
+    "observacao": "Sigla da UF do Município ou do Estado"
+   },
+   {
+    "nome": "CO_COMP_MASSA",
+    "descricao": "COMPOSIÇÃO DA MASSA",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "1 - Civil\n2 - Militar",
+    "observacao": ""
+   },
+   {
+    "nome": "CO_TIPO_FUNDO",
+    "descricao": "TIPO DE FUNDO",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "1 - Fundo em Capitalização ou sem Segregação da Massa\n2 - Fundo em Repartição (em caso de Segregação da Massa)\n3 - Beneficiário sob responsabilidade direta do ente federativo (\"Mantidos pelo Tesouro\")",
+    "observacao": ""
+   },
+   {
+    "nome": "CNPJ_ORGAO",
+    "descricao": "CNPJ do órgão ou entidade ao qual o instituidor está vinculado, conforme informado no DIPR",
+    "tipo": "Caracter",
+    "formato": "000.000.000/0000-00",
+    "categorias": "",
+    "observacao": ""
+   },
+   {
+    "nome": "NO_ORGAO",
+    "descricao": "NOME DO ÓRGÃO/ENTIDADE",
+    "tipo": "Caracter",
+    "formato": "",
+    "categorias": "",
+    "observacao": ""
+   },
+   {
+    "nome": "CO_PODER",
+    "descricao": "CÓDIGO DO PODER",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "1 - Executivo\n2 - Legislativo\n3 - Judiciário\n4 - Ministério Público\n5 - Tribunal de Contas\n6 - Defensoria Pública",
+    "observacao": ""
+   },
+   {
+    "nome": "CO_TIPO_PODER",
+    "descricao": "CÓDIGO DO TIPO DE PODER",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "1 - Administração Direta\n2 - Administração Indireta",
+    "observacao": ""
+   },
+   {
+    "nome": "CO_TIPO_INSTITUIDOR",
+    "descricao": "CÓDIGO DO TIPO DE INSTITUIDOR",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "1 - Civis - Servidores Ativos\n2 - Civis - Aposentados\n3 - Militares - Ativos\n4 - Militares - Inativos (Reserva ou Reforma)",
+    "observacao": ""
+   },
+   {
+    "nome": "ID_INSTITUIDOR_MATRICULA",
+    "descricao": "IDENTIFICAÇÃO DO SEGURADO INSTITUIDOR DA PENSÃO\n(matrícula)",
+    "tipo": "Inteiro",
+    "formato": "",
+    "categorias": "",
+    "observacao": ""
+   },
+   {
+    "nome": "ID_INSTITUIDOR_CPF",
+    "descricao": "IDENTIFICAÇÃO DO SEGURADO INSTITUIDOR DA PENSÃO\n(CPF)",
+    "tipo": "Caracter",
+    "formato": "000.000.000-00",
+    "categorias": "",
+    "observacao": ""
+   },
+   {
+    "nome": "ID_INSTITUIDOR_PIS_PASEP",
+    "descricao": "IDENTIFICAÇÃO DO SEGURADO INSTITUIDOR DA PENSÃO\n(PIS-PASEP)",
+    "tipo": "Caracter",
+    "formato": "000.00000.00-0",
+    "categorias": "",
+    "observacao": ""
+   },
+   {
+    "nome": "DT_NASC_INSTITUIDOR",
+    "descricao": "DATA DE NASCIMENTO DO INSTITUIDOR DA PENSÃO",
+    "tipo": "Data",
+    "formato": "dd/mm/aaaa",
+    "categorias": "",
+    "observacao": ""
+   },
+   {
+    "nome": "DT_OBITO_INSTITUIDOR",
+    "descricao": "DATA DO FALECIMENTO DO INSTITUIDOR DA PENSÃO",
+    "tipo": "Data",
+    "formato": "dd/mm/aaaa",
+    "categorias": "",
+    "observacao": ""
+   },
+   {
+    "nome": "ID_PENSIONISTA_MATRICULA",
+    "descricao": "IDENTIFICAÇÃO DO PENSIONISTA\n(CPF)",
+    "tipo": "Caracter",
+    "formato": "000.000.000-00",
+    "categorias": "",
+    "observacao": ""
+   },
+   {
+    "nome": "ID_PENSIONISTA_CPF",
+    "descricao": "IDENTIFICAÇÃO DO PENSIONISTA\n(CPF)",
+    "tipo": "Caracter",
+    "formato": "000.000.000-00",
+    "categorias": "",
+    "observacao": ""
+   },
+   {
+    "nome": "CO_SEXO_PENSIONISTA",
+    "descricao": "CÓDIGO DO SEXO DO PENSIONISTA",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "1 - Feminino\n2 - Masculino",
+    "observacao": ""
+   },
+   {
+    "nome": "DT_NASC_PENSIONISTA",
+    "descricao": "DATA DE NASCIMENTO DO PENSIONISTA",
+    "tipo": "Data",
+    "formato": "dd/mm/aaaa",
+    "categorias": "",
+    "observacao": ""
+   },
+   {
+    "nome": "CO_SITUACAO",
+    "descricao": "CODIGO DA SITUACAO ATUAL",
+    "tipo": "Inteiro",
+    "formato": "",
+    "categorias": "12 - Falecido\n13 - Benefício cessado por processo administrativo ou judicial",
+    "observacao": "benefícios cessados por falecimentos ou decisões administrativas/judiciais ocorridas entre a competência da base cadastral utilizada na avaliação atuarial do ano anterior e a do ano atual)"
+   },
+   {
+    "nome": "DT_SITUACAO",
+    "descricao": "DATA DA SITUAÇÃO",
+    "tipo": "Data",
+    "formato": "dd/mm/aaaa",
+    "categorias": "",
+    "observacao": "Data de ocorrência do Evento (Falecimento ou Benefício cessado por processo administrativo ou judicial)"
+   },
+   {
+    "nome": "CO_TIPO_RELACAO",
+    "descricao": "TIPO DE RELAÇÃO DO PENSIONISTA COM O SEGURADO INSTITUIDOR",
+    "tipo": "Inteiro",
+    "formato": "",
+    "categorias": "1 - Cônjuge, a companheira, o companheiro\n2 - Filho não emancipado, menor de 21 anos ou outra idade legislação RPPS\n3 - Filho inválido ou com deficiência\n4 - Pais\n5 - Irmão não emancipado, menor de 21 anos ou inválido ou com deficiência\n6 - Outros",
+    "observacao": ""
+   },
+   {
+    "nome": "DT_INICIO_PENSAO",
+    "descricao": "DATA DE INÍCIO DO BENEFÍCIO DE PENSÃO",
+    "tipo": "Data",
+    "formato": "dd/mm/aaaa",
+    "categorias": "",
+    "observacao": ""
+   },
+   {
+    "nome": "VL_BENEF_PENSAO",
+    "descricao": "VALOR MENSAL DO BENEFÍCIO DE PENSÃO",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "Com duas casas decimais",
+    "observacao": "Não formatar como Moeda;\nUsar a vírgula como separador de decimal"
+   },
+   {
+    "nome": "VL_TOT_PENSAO",
+    "descricao": "VALOR TOTAL DA PENSÃO",
+    "tipo": "Numérico",
+    "formato": "R$",
+    "categorias": "Com duas casas decimais",
+    "observacao": "somatorio dos valores individuais das cotas, em R$"
+   },
+   {
+    "nome": "VL_PCT_QUOTA",
+    "descricao": "VALOR PERCENTUAL DA QUOTA RECEBIDA PELO PENSIONISTA",
+    "tipo": "Numérico",
+    "formato": "%",
+    "categorias": "Com duas casas decimais",
+    "observacao": ""
+   },
+   {
+    "nome": "VL_CONTRIBUICAO",
+    "descricao": "VALOR MENSAL DA CONTRIBUÇÃO PREVIDENCIÁRIA",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "Com duas casas decimais",
+    "observacao": "Não formatar como Moeda;\nUsar a vírgula como separador de decimal"
+   },
+   {
+    "nome": "VL_COMPENS_PREVID",
+    "descricao": "VALOR MENSAL DA COMPENSAÇÃO PREVIDENCIÁRIA",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "Com duas casas decimais",
+    "observacao": "Não formatar como Moeda;\nUsar a vírgula como separador de decimal"
+   },
+   {
+    "nome": "IN_PARID_SERV",
+    "descricao": "INDICADOR DE PARIDADE COM SERVIDORES ATIVOS",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "1- Sim\n2- Não",
+    "observacao": ""
+   },
+   {
+    "nome": "CO_CONDICAO",
+    "descricao": "CONDIÇÃO DO PENSIONISTA",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "1 - Válido\n2 -Inválido",
+    "observacao": ""
+   },
+   {
+    "nome": "CO_DURACAO",
+    "descricao": "DURAÇÃO DO BENEFÍCIO",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "1 - Vitalício\n2 - Temporário",
+    "observacao": ""
+   },
+   {
+    "nome": "NU_TEMPO_DURACAO",
+    "descricao": "TEMPO DE DURAÇÃO DO BENEFÍCIO",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "",
+    "observacao": "em anos, se temporário"
+   },
+   {
+    "nome": "IN_PREV_COMP",
+    "descricao": "INDICADOR DE PREVIDÊNCIA COMPLEMENTAR",
+    "tipo": "Numérico",
+    "formato": "",
+    "categorias": "1 - Sim\n2 - Não",
+    "observacao": "aposentado sujeito ao teto do RGPS em decorrência de instituição pelo ente de regime de previdência complementar"
+   },
+   {
+    "nome": "VL_TETO_ESPECIFICO",
+    "descricao": "TETO CONSTITUCIONAL REMUNERATÓRIO ESPECÍFICO (DOS SERVIDORES DO RESPECTIVO PODER)",
+    "tipo": "Numérico",
+    "formato": "Em R$",
+    "categorias": "Com duas casas decimais",
+    "observacao": "(Art. 37, XI, da CF)"
+   }
+  ]
+ }
+}

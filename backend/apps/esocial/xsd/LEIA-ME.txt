@@ -1,0 +1,2 @@
+Copie aqui os arquivos .xsd do pacote de leiautes do eSocial (versao S-1.3), baixados em gov.br/esocial.
+Com eles, o SIST valida cada XML contra o esquema oficial antes da exportacao.

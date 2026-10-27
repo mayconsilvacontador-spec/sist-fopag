@@ -1,0 +1,26 @@
+# SIST - Sistema Integrado de Gestão de RPPS
+# Dependências de produção do backend (Python 3.12+)
+
+Django>=5.2.17,<5.3            # LTS (suporte até abr/2028)
+djangorestframework>=3.16,<3.19
+djangorestframework-simplejwt>=5.5,<5.6
+django-cors-headers>=4.9,<5
+django-filter>=25.1
+django-environ>=0.12,<0.15
+drf-spectacular>=0.28,<0.31
+
+psycopg[binary]>=3.2,<3.4      # driver PostgreSQL (psycopg 3)
+psycopg2-binary>=2.9,<3        # fallback: Smart App Control do Windows bloqueia as DLLs do psycopg[binary]
+argon2-cffi>=23.1               # hash de senhas Argon2
+
+celery>=5.5,<5.7
+redis>=5.0,<9
+
+openpyxl>=3.1,<3.2              # exportação Excel
+tzdata>=2024.1                  # base de fusos horários (necessária no Windows)
+lxml>=5.3,<7                    # validação dos XMLs do eSocial contra os XSDs oficiais
+python-docx>=1.1,<2              # minutas e portarias da concessão em Word (.docx)
+cryptography>=43                # certificado A1 (.pfx) e criptografia do arquivo guardado
+requests>=2.32,<3               # chamadas SOAP ao eSocial com certificado do cliente (TLS mútuo)
+anthropic>=1,<2                 # leitura inteligente de documentos digitalizados (Claude, visão + saída estruturada)
+pymupdf>=1.24,<2               # páginas do PDF em imagem + OCR local (Tesseract) com posição de cada palavra

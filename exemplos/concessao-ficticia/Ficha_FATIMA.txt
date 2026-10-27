@@ -1,0 +1,120 @@
+FICHA FATIMA — DELIBERAÇÃO TCE-RJ 260 — CONCESSÃO FICTÍCIA DE TESTE (não usar como dado real)
+Processo 000001/2026 · Situação: Publicado
+tipo: Aposentadoria
+pensao: False
+
+PASSOS
+
+  1 INFORMACOES INICIAIS
+
+    SERVIDOR
+      CPF: 215.830.510-07
+      Nome: MARIA DAS GRAÇAS EXEMPLO (FICTÍCIA)
+      Data de nascimento: 1964-05-12
+      Sexo: Feminino
+      Órgão: Prefeitura Municipal Fictícia (FICTÍCIO — TESTE)
+      Código SIGFIS do órgão: 9001
+      Matrícula: 900123
+      Cargo inicial: Agente Administrativo (FICTÍCIO — TESTE)
+      Carreira: Apoio Administrativo
+      Data de ingresso (cargo de referência): 1995-03-01
+      Forma de admissão: Concurso público
+      Último cargo (se houve enquadramento): 
+
+    APOSENTADORIA
+      Nº do processo: 000001/2026
+      Fundamentação constitucional: Art. 6º da EC 41/2003
+      Modalidade: Por tempo de contribuição
+      Data do requerimento: 2026-10-21
+      Nº do ato concessório: 999/2026
+      Data de emissão: 2026-10-21
+      Data de publicação: 2026-10-21
+      Meio de publicação: Boletim Oficial FICTÍCIO nº 0001
+      Natureza do ato: Portaria
+      Legislação local: Emenda à Lei Orgânica nº 28/2025 e LC 106/2025 (exemplo fictício)
+      Data de validade: 2026-10-21
+      Classificação da data de validade: Data da publicação
+      Fundamentação legal da data de validade: 
+      Decorre de decisão judicial: Não
+      Causa da incapacidade: 
+      CID: 
+      Data do laudo médico: 
+
+  2 TEMPO DE CONTRIBUICAO
+    data_referencia: 2026-10-21
+    periodos:
+      - inicio: 1988-02-01 | fim: 1995-02-28 | fim_apurado: 1995-02-28 | natureza: 01 | natureza_display: INSS — iniciativa privada | descricao: Averbação — INSS — empregos privados (fictício) (CTC CTC-FICT-0001) | servico_publico: False | magisterio: False | especial: False | dias_brutos: 2585 | deducoes: 0 | concomitancia: 0 | acrescimo_conversao: 0 | dias_liquidos: 2585 | ativo: False | avisos: []
+      - inicio: 1995-03-01 | fim: None | fim_apurado: 2026-10-21 | natureza: 05 | natureza_display: RPPS do órgão de origem | descricao: Prefeitura Municipal Fictícia (FICTÍCIO — TESTE) — matrícula 900123 (Agente Administrativo (FICTÍCIO — TESTE)) | servico_publico: True | magisterio: False | especial: False | dias_brutos: 11558 | deducoes: 0 | concomitancia: 0 | acrescimo_conversao: 0 | dias_liquidos: 11558 | ativo: True | avisos: []
+    avisos:
+
+    TOTAIS
+
+      CONTRIBUICAO
+        dias: 14143
+        texto: 38 ano(s), 9 mês(es) e 3 dia(s)
+
+      SERVICO PUBLICO
+        dias: 11558
+        texto: 31 ano(s), 8 mês(es) e 3 dia(s)
+
+      MAGISTERIO
+        dias: 0
+        texto: 0 ano(s), 0 mês(es) e 0 dia(s)
+
+      ESPECIAL
+        dias: 0
+        texto: 0 ano(s), 0 mês(es) e 0 dia(s)
+
+      CARREIRA
+        dias: 11558
+        texto: 31 ano(s), 8 mês(es) e 3 dia(s)
+
+      CARGO
+        dias: 11558
+        texto: 31 ano(s), 8 mês(es) e 3 dia(s)
+
+  3 ULTIMA REMUNERACAO
+    competencia: 09/2026
+    parcelas:
+      - Parcela: Remuneração de contribuição | Integra a remuneração de referência: Sim | Percentual:  | Valor: 6080.00 | Fundamentação: Última remuneração até a data-base do cálculo | Verba de correlação: Vencimento
+
+  4 SALARIO DE CONTRIBUICAO
+    media: 3452.38
+    competencias: 387
+    observacao: Importe o arquivo SalContr.txt (gerado no Histórico Contributivo) no FATIMA.
+
+  5 PROVENTOS
+    parcelas:
+      - Parcela: Proventos integrais | Percentual:  | Fator de proporcionalidade:  | Valor: 6080.00 | Fundamentação: Art. 6º da EC 41/2003 | Verba de correlação: Vencimento
+    total: 6080.00
+    forma_de_calculo: Integralidade (remuneração do cargo efetivo)
+
+  6 ACUMULACAO
+    observacao: Informe as acumulações declaradas pelo servidor ou marque “Não há acumulação”.
+  7_documentos:
+    - item: II.01 | documento: Ato de concessão e de fixação de proventos (arquivo único)
+    - item: II.02 | documento: Publicação do(s) ato(s)
+    - item: II.03 | documento: Requerimento de inativação (com opção pela regra)
+    - item: II.3 | documento: Certidão de tempo de serviço/contribuição do RPPS de origem
+    - item: II.04.1 | documento: Certidões das averbações (INSS / outros RPPS)
+    - item: II.06 | documento: Identidade e CPF do servidor (mesmo arquivo)
+    - item: II.07 | documento: Declaração de acumulação ou não de cargos/proventos
+    - item: II.08 | documento: Comprovante de pagamento da remuneração do mês anterior à inativação
+    - item: II.09 | documento: Comprovante de pagamento dos proventos do mês posterior
+    - item: II.11 | documento: Memória de cálculo dos proventos
+    - item: II.14 | documento: Histórico da vida funcional
+
+ENQUADRAMENTO
+  nome: Transição do art. 6º da EC 41 (integralidade)
+  codigo: EC41_ART6
+  fundamento: Art. 6º da EC 41/2003
+  requisitos:
+    - atual: 61 anos | exigido: 55 anos | descricao: Idade mínima
+    - atual: 37 anos e 144 dias (13.649 dias) | exigido: 30 anos (10.950 dias) | descricao: Tempo de contribuição
+    - atual: 30 anos e 114 dias (11.064 dias) | exigido: 20 anos | descricao: Tempo de serviço público
+    - atual: 30 anos e 114 dias (11.064 dias) | exigido: 10 anos | descricao: Tempo na carreira
+    - atual: 30 anos e 114 dias (11.064 dias) | exigido: 5 anos | descricao: Tempo no cargo
+  data_referencia: 2025-06-14
+  data_cumprimento: 2019-05-12
+avisos:
+  - Integralidade calculada pela última remuneração de contribuição. Confira a composição da remuneração do cargo efetivo (Emenda à LOM 28/2025, art. 4º, parágrafo único: vantagens do cargo, adicionais de caráter individual e médias das parcelas variáveis).

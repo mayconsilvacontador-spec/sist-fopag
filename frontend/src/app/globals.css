@@ -1,0 +1,123 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+ * SIST — tokens visuais (linguagem SIST-SIFAB)
+ * Branco, cinza claro e vermelho-vinho institucional. Menu lateral claro. Sem gradientes.
+ * Para ajustar a identidade, altere SOMENTE os valores abaixo.
+ */
+@layer base {
+  :root {
+    --font-sans: "Segoe UI", "Inter", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --font-mono: "Cascadia Mono", Consolas, "SFMono-Regular", Menlo, monospace;
+
+    --background: 220 14% 96%;        /* cinza muito claro do fundo */
+    --foreground: 220 18% 18%;        /* texto principal */
+    --card: 0 0% 100%;
+    --card-foreground: 220 18% 18%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 18% 18%;
+
+    --primary: 356 72% 42%;           /* vermelho institucional (botões, links, destaques) */
+    --primary-foreground: 0 0% 100%;
+    --primary-soft: 356 80% 96%;
+    --primary-strong: 356 72% 30%;    /* vinho dos títulos e números */
+
+    --secondary: 220 14% 95%;
+    --secondary-foreground: 220 18% 22%;
+    --muted: 220 14% 96%;
+    --muted-foreground: 220 9% 46%;
+    --accent: 356 80% 96%;
+    --accent-foreground: 356 72% 32%;
+
+    --destructive: 2 72% 46%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 220 13% 90%;
+    --input: 220 13% 84%;
+    --ring: 356 72% 45%;
+    --radius: 0.625rem;
+
+    /* Menu lateral (claro; grupo ativo em vermelho) */
+    --sidebar: 0 0% 100%;
+    --sidebar-foreground: 220 9% 40%;
+    --sidebar-muted: 220 9% 58%;
+    --sidebar-active: 356 80% 96%;
+    --sidebar-active-foreground: 356 72% 40%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-attention: 33 95% 58%;  /* módulo com pendências (laranja) */
+    --sidebar-width: 15.25rem;
+    --sidebar-width-collapsed: 4rem;
+    --topbar-height: 3.875rem;
+
+    /* Avatar do usuário */
+    --avatar: 220 18% 25%;
+
+    /* Alertas */
+    --critical: 2 72% 42%;
+    --critical-soft: 4 86% 97%;
+    --critical-border: 4 80% 88%;
+    --warning: 30 90% 40%;
+    --warning-soft: 40 100% 96%;
+    --warning-border: 40 90% 82%;
+    --info: 212 72% 42%;
+    --info-soft: 212 90% 97%;
+    --info-border: 212 80% 88%;
+    --success: 152 60% 30%;
+    --success-soft: 145 60% 96%;
+    --success-border: 145 50% 82%;
+
+    /* Selo DEMO (dados de demonstração) */
+    --demo: 271 50% 42%;
+    --demo-soft: 270 70% 97%;
+    --demo-border: 270 50% 86%;
+
+    /* Gráficos — paleta validada (faixa de luminosidade, daltonismo, contraste) */
+    --chart-1: 356 70% 48%;           /* vermelho */
+    --chart-2: 215 18% 26%;           /* grafite */
+    --chart-3: 40 72% 50%;            /* dourado */
+    --chart-4: 215 16% 62%;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  html {
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans text-[13px] leading-5;
+  }
+
+  ::selection {
+    background: hsl(var(--primary) / 0.15);
+  }
+}
+
+@layer components {
+  /* Título de seção em caixa alta, padrão institucional */
+  .section-label {
+    @apply text-2xs font-semibold uppercase tracking-wider text-muted-foreground;
+  }
+
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Barra de rolagem discreta */
+  .thin-scroll {
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--border)) transparent;
+  }
+  .thin-scroll::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  .thin-scroll::-webkit-scrollbar-thumb {
+    background: hsl(var(--border));
+    border-radius: 3px;
+  }
+}

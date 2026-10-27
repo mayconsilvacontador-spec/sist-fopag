@@ -1,0 +1,37 @@
+# Segredos
+.env
+.env.local
+*.pem
+*.pfx
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+backend/media/
+backend/staticfiles/
+
+# Node / Next.js
+node_modules/
+.next/
+out/
+*.tsbuildinfo
+next-env.d.ts
+
+# IDE / SO
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+backups/
+
+# Pacotes, certificados locais e configurações pessoais
+*.zip
+frontend/certs/
+.claude/settings.local.json
+
+# Senhas locais
+backend/SENHA_INICIAL.txt
+*SENHA*.txt
