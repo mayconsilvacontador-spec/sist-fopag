@@ -48,7 +48,7 @@ export function receitaToForm(r: ReceitaPerson): Partial<FormState> {
   return out;
 }
 
-/** Formulário do Cadastro Único (inclusão e edição). */
+/** Formulário do cadastro (inclusão e edição). */
 export function PersonForm({
   person, initialCpf, prefill, disabled, onSaved, onCancel,
 }: {
@@ -101,7 +101,7 @@ export function PersonForm({
       const saved = person
         ? await api<Person>(`people/${person.id}`, { method: "PATCH", body })
         : await api<Person>("people", { method: "POST", body });
-      toast.success(person ? "Cadastro atualizado." : "Pessoa incluída no Cadastro Único.");
+      toast.success(person ? "Cadastro atualizado." : "Pessoa cadastrada.");
       onSaved(saved);
     } catch (err) {
       if (err instanceof ApiError) setErrors(err.fieldErrors);

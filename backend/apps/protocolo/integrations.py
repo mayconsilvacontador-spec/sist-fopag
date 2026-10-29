@@ -57,7 +57,7 @@ def search_processes(request, term, limit):
     ]
 
 
-@provider("pessoas", "Cadastro Único", "cadastros.segurados:visualizar")
+@provider("pessoas", "Servidores e beneficiários", "cadastros.segurados:visualizar")
 def search_people(request, term, limit):
     from apps.core.validators import format_cpf
     from apps.people.models import Person

@@ -156,7 +156,7 @@ class Averages:
         elif not table:
             self.pendencias.append("Sem tabela de fatores de atualização (Histórico contributivo › Tabelas de "
                                    "atualização): a média não pode ser calculada com valores nominais "
-                                   "(Lei 3.965/2011, art. 62, § 2º).")
+                                   "(regra da média: valores atualizados mês a mês).")
         else:
             if missing:
                 self.pendencias.append(f"{len(missing)} competência(s) sem fator na tabela de {table:%m/%Y}: "
@@ -173,8 +173,7 @@ class Averages:
             if self.gaps:
                 self.pendencias.append(
                     f"{len(self.gaps)} competência(s) do vínculo com o RPPS sem salário de contribuição: "
-                    f"{_fmt_months(self.gaps)}. Cadastre a remuneração do cargo nesses meses (Lei 3.965/2011, art. 62, "
-                    "§ 3º) ou registre o afastamento não computável no histórico funcional.")
+                    f"{_fmt_months(self.gaps)}. Cadastre a remuneração do cargo nesses meses (legislação do RPPS) ou registre o afastamento não computável no histórico funcional.")
 
         corrected.sort(reverse=True)
         self.media100 = _q(sum(corrected) / len(corrected)) if corrected else None
@@ -218,7 +217,7 @@ def estimate(rule, evaluator, avg: Averages, on: date, eligible: date | None = N
         return min(Decimal(100), Decimal(60) + Decimal(2) * max(Decimal(0), whole_years - 20))
 
     def cap(v):
-        """Limite à remuneração do cargo efetivo (Lei 3.965, art. 62, § 10) — antes de qualquer fração."""
+        """Limite à remuneração do cargo efetivo (art. 40, § 2º, CF) — antes de qualquer fração."""
         if v is not None and remuneration and v > remuneration:
             return remuneration, " — limitada à remuneração do cargo efetivo"
         return v, ""
@@ -258,7 +257,7 @@ def estimate(rule, evaluator, avg: Averages, on: date, eligible: date | None = N
         fraction = min(Decimal(1), Decimal(days) / Decimal(required)).quantize(Decimal("0.0001"), ROUND_HALF_UP)
         value = _q(base * fraction)
         how = (f"Proporcional: {days} ÷ {required} dias = {fraction} × média dos 80% maiores{note} "
-               "(Lei 3.965/2011, art. 63)")
+               "(CF, art. 40, § 1º, III, b)")
     elif code == "EC41_ART2" and avg.media80:
         base, note = cap(avg.media80)
         ref_age = 55 if sex_f else 60
@@ -270,16 +269,16 @@ def estimate(rule, evaluator, avg: Averages, on: date, eligible: date | None = N
     elif code == "COMPULSORIA":
         reform = get_parameter(person.institution, "previdencia.vigencia_reforma_local")
         reform = date.fromisoformat(reform) if reform else None
-        if reform is None:
-            warnings.append("Parâmetro previdencia.vigencia_reforma_local não cadastrado — compulsória não calculada.")
-        elif eligible < reform and avg.media80:
+        if (reform is None or eligible < reform) and avg.media80:  # sem reforma local: regra antiga
+            if reform is None:
+                warnings.append("RPPS sem data de reforma local cadastrada: compulsória calculada pela regra anterior à EC 103.")
             base, note = cap(avg.media80)
             required = (30 if sex_f else 35) * DAYS_YEAR
             fraction = min(Decimal(1), Decimal(days) / Decimal(required)).quantize(Decimal("0.0001"), ROUND_HALF_UP)
             value = _q(base * fraction)
             how = (f"Compulsória (antes da reforma): {days} ÷ {required} dias = {fraction} × média dos 80% maiores"
-                   f"{note} (Lei 3.965/2011, arts. 30 e 63)")
-        elif eligible >= reform and avg.media100:
+                   f"{note} (CF, art. 40, § 1º, II)")
+        elif reform is not None and eligible >= reform and avg.media100:
             pct = perc_103()
             base, note = cap(_q(avg.media100 * pct / 100))
             fraction = min(Decimal(1), Decimal(days) / Decimal(20 * DAYS_YEAR)).quantize(Decimal("0.0001"), ROUND_HALF_UP)

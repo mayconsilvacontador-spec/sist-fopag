@@ -2,7 +2,7 @@
 
 /**
  * Leitura inteligente de processos: envie os PDFs (mesmo digitalizados), a IA reconhece cada documento e extrai os
- * dados com a página de origem; a equipe confere ao lado do documento e aplica ao Cadastro Único.
+ * dados com a página de origem; a equipe confere ao lado do documento e aplica ao cadastro.
  */
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -27,13 +27,15 @@ import { api, fetcher, type Paginated } from "@/lib/api";
 import { formatDateTime } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
+import { ImplantCard, OrganizeCard } from "./processo";
+
 type Settings = {
   motor: "LOCAL" | "ANTHROPIC"; motores: { value: string; label: string }[]; pronto: boolean;
   ativo: boolean; chave_cadastrada: boolean; chave_final: string; modelo: string; modelos: { value: string; label: string }[];
   ciencia_privacidade: boolean; ultimo_teste: string | null; resultado_teste: string; pode_configurar: boolean;
 };
 type Progress = { total: number; lidos: number; erros: number; situacao: string; tokens_entrada: number; tokens_saida: number; custo_estimado_usd: number; motor: string; paginas: number; paginas_lidas: number };
-type Job = { id: string; title: string; engine: string; status: string; status_display: string; person: string | null; person_name: string; created_at: string; created_by_name: string; applied_at: string | null; andamento: Progress };
+type Job = { id: string; title: string; engine: string; status: string; status_display: string; person: string | null; person_name: string; created_at: string; created_by_name: string; applied_at: string | null; andamento: Progress; concession: string | null };
 type Field = { id: string; chave: string; rotulo: string; valor: string; original: string; pagina: number; trecho: string; confianca: "alta" | "media" | "baixa"; confirmado: boolean; ignorado: boolean; caixa?: number[] | null };
 type Row = { periodo: string; bruto: number | null; faltas: number | null; licencas: number | null; suspensoes: number | null; outras: number | null; liquido: number | null; pagina: number; corrigido?: boolean; suspeito?: boolean };
 type Rub = { codigo: string; descricao: string; referencia: string; valor: string; natureza: string; pagina: number };
@@ -98,7 +100,7 @@ function Reading() {
                 <li>O sistema reconhece cada documento e lê os dados — inclusive de folhas digitalizadas.</li>
                 <li>Confira: cada dado aparece com a página de onde veio. Confirme, corrija ou ignore.</li>
                 <li>O sistema confere os documentos entre si (CPF, nascimento, contas da CTC, totais do contracheque).</li>
-                <li>Aplique: pessoa, vínculo, averbações, faltas e os arquivos vão para o Cadastro Único.</li>
+                <li>Aplique: pessoa, vínculo, averbações, faltas e os arquivos vão para a Pasta do Servidor.</li>
               </ol>
             </CardContent></Card>
           )}
@@ -286,6 +288,8 @@ function JobView({ id, onChanged }: { id: string; onChanged: () => void }) {
           </Card>
         )}
 
+        {(data.status === "LENDO" || data.status === "CONFERENCIA") && <OrganizeCard job={data} onChanged={() => { mutate(); onChanged(); }} />}
+
         {data.arquivos.map((f) => (
           <Card key={f.id}>
             <CardHeader className="flex-wrap gap-2">
@@ -306,6 +310,7 @@ function JobView({ id, onChanged }: { id: string; onChanged: () => void }) {
 
         {editable && <ApplyCard job={data} pending={pending} onDone={() => { mutate(); onChanged(); }} />}
         {data.status === "APLICADO" && <AppliedCard job={data} />}
+        {data.status === "APLICADO" && data.person && <ImplantCard job={data} onChanged={() => { mutate(); onChanged(); }} />}
       </div>
       {viewer && (
         <Card className="2xl:sticky 2xl:top-2 2xl:self-start">
@@ -439,7 +444,7 @@ function ApplyCard({ job, pending, onDone }: { job: JobDetail; pending: number; 
     setBusy(true);
     try {
       await api(`leitura/leituras/${job.id}/aplicar`, { method: "POST", body: { orgao: organ || undefined, massa, sexo: sexo || undefined, ctc: use } });
-      toast.success("Dados aplicados ao Cadastro Único.");
+      toast.success("Dados aplicados à Pasta do Servidor.");
       onDone();
     } catch (err) { toast.error((err as Error).message); } finally { setBusy(false); }
   };
@@ -474,7 +479,7 @@ function ApplyCard({ job, pending, onDone }: { job: JobDetail; pending: number; 
           </div>
         )}
         <p className="text-muted-foreground">Nada já cadastrado é sobrescrito: só campos vazios são completados e as diferenças ficam listadas. Os PDFs vão para os documentos da pessoa.</p>
-        <Button onClick={apply} disabled={busy || pending > 0 || errors > 0}>{busy && <Loader2 className="animate-spin" />} Aplicar ao Cadastro Único</Button>
+        <Button onClick={apply} disabled={busy || pending > 0 || errors > 0}>{busy && <Loader2 className="animate-spin" />} Aplicar à Pasta do Servidor</Button>
         {(pending > 0 || errors > 0) && <span className="ml-2 text-warning">{pending > 0 ? `${pending} dado(s) sem conferência` : ""}{pending > 0 && errors > 0 ? " · " : ""}{errors > 0 ? `${errors} divergência(s) a resolver` : ""}</span>}
       </CardContent>
     </Card>
@@ -491,7 +496,7 @@ function AppliedCard({ job }: { job: JobDetail }) {
           <TableRow key={k}><TableCell className="w-48 font-medium">{labels[k] ?? k}</TableCell><TableCell className="text-xs">{v.join(" · ")}</TableCell></TableRow>))}
         {Object.values(job.aplicado).every((v) => !v.length) && <EmptyRow cols={2} text="Nada aplicado." />}
       </TableBody></Table>
-      {job.person && <CardContent className="pt-3"><a className="text-xs text-primary underline" href={`/cadastros/pessoas/${job.person}`}>Abrir no Cadastro Único</a> · Abra a concessão a partir do Protocolo normalmente.</CardContent>}
+      {job.person && <CardContent className="pt-3"><a className="text-xs text-primary underline" href={`/cadastros/pessoas/${job.person}`}>Abrir a Pasta do Servidor</a> · Benefício já concedido? Implante-o no quadro abaixo. Pedido novo? Abra a concessão pelo Protocolo.</CardContent>}
     </Card>
   );
 }

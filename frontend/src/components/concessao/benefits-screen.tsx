@@ -30,7 +30,7 @@ const OPS: Record<Op, { label: string; module: string; when: BenefitRow["status"
   SUSPENSAO: { label: "Suspensão", module: "concessao.suspensao", when: ["ATIVO"], hint: "Ex.: prova de vida não realizada, recadastramento pendente." },
   RESTABELECIMENTO: { label: "Restabelecimento", module: "concessao.suspensao", when: ["SUSPENSO"], hint: "Volta a pagar o benefício suspenso." },
   CESSACAO: { label: "Cessação", module: "concessao.cessacao", when: ["ATIVO", "SUSPENSO"], hint: "Ex.: óbito, fim da cota temporária (21 anos), perda da qualidade de dependente." },
-  REVERSAO: { label: "Reversão", module: "concessao.reversao", when: ["ATIVO", "SUSPENSO"], hint: "Retorno do aposentado à atividade. Cadastre o novo vínculo no Cadastro Único." },
+  REVERSAO: { label: "Reversão", module: "concessao.reversao", when: ["ATIVO", "SUSPENSO"], hint: "Retorno do aposentado à atividade. Cadastre o novo vínculo na Pasta do Servidor." },
 };
 const STATUS_VARIANT = { ATIVO: "success", SUSPENSO: "warning", CESSADO: "neutral" } as const;
 

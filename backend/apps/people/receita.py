@@ -11,7 +11,7 @@ simula resposta. Cada consulta é registrada na auditoria (LGPD) e envia, como
 exige a API, o CPF do usuário que consultou (cabeçalho x-cpf-usuario).
 
 Atenção: na Receita, Sexo 1 = masculino e 2 = feminino; no leiaute SPREV
-(usado no Cadastro Único) é o contrário — a conversão é feita aqui.
+(usado no cadastro) é o contrário — a conversão é feita aqui.
 """
 import base64
 import json
@@ -86,7 +86,7 @@ def _date(v):
 
 
 def normalize(item: dict) -> dict:
-    """Converte a resposta da Receita para os campos do Cadastro Único."""
+    """Converte a resposta da Receita para os campos do cadastro."""
     street = " ".join(p for p in (item.get("TipoLogradouro"), item.get("Logradouro")) if p).strip()
     cep = only_digits(str(item.get("Cep") or ""))
     return {

@@ -176,6 +176,7 @@ class FinancialCategory(models.TextChoices):
     NENHUMA = "", "Outras"
     CONTRIB_RPPS = "CONTRIB_RPPS", "Contribuição do servidor ao RPPS (desconto)"
     BASE_RPPS = "BASE_RPPS", "Base de contribuição ao RPPS (informativa)"
+    INCIDE_RPPS = "INCIDE_RPPS", "Provento que entra na base do RPPS"
     PATRONAL = "PATRONAL", "Contribuição patronal (informativa)"
     IRRF = "IRRF", "Imposto de renda (desconto)"
 

@@ -209,7 +209,7 @@ function OpenDialog({ onClose, onOpened }: { onClose: () => void; onOpened: (p: 
               <Input id="o-subject" value={f.subject} onChange={set("subject")} required />
             </FormField>
             <FormField label="CPF do interessado" htmlFor="o-cpf" error={errors.interested_cpf}
-              hint={person ? "Encontrado no Cadastro Único." : "Se estiver no Cadastro Único, o processo é vinculado à pessoa."}>
+              hint={person ? "Pessoa já cadastrada." : "Se a pessoa estiver cadastrada, o processo é vinculado a ela."}>
               <Input id="o-cpf" value={f.cpf} inputMode="numeric" placeholder="000.000.000-00"
                 onChange={(e) => { const v = maskCPF(e.target.value); setF((s) => ({ ...s, cpf: v })); lookup(v); }} />
             </FormField>

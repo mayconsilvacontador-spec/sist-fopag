@@ -44,7 +44,7 @@ function Links() {
     <>
       <PageHeader
         title="Vínculos"
-        description="Vínculos funcionais de todos os servidores. Para incluir, abra a pessoa no Cadastro Único."
+        description="Vínculos funcionais de todos os servidores. Para incluir, abra a Pasta do Servidor."
         breadcrumb={[{ label: "Gestão de Cadastros" }, { label: "Vínculos" }]}
       />
       <Card>

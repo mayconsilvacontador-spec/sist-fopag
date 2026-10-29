@@ -21,7 +21,7 @@ from .serializers import (
 class PersonViewSet(InstitutionScopedMixin, mixins.ListModelMixin, mixins.RetrieveModelMixin,
                     mixins.CreateModelMixin, mixins.UpdateModelMixin, viewsets.GenericViewSet):
     """
-    Cadastro Único. Sem exclusão. Filtros: ?search= (nome, CPF, matrícula),
+    cadastro. Sem exclusão. Filtros: ?search= (nome, CPF, matrícula),
     ?tipo=servidor|aposentado|dependente|falecido.
     """
 

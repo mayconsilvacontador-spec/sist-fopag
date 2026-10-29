@@ -46,7 +46,7 @@ def _need(request, perm: str, who: str):
 
 
 def _cadastro(person) -> dict:
-    """Dados atuais do Cadastro Único para conferência ao anexar comprovante de residência / identidade."""
+    """Dados atuais do cadastro para conferência ao anexar comprovante de residência / identidade."""
     from apps.people.models import Address
 
     a = Address.objects.filter(person=person, valid_to__isnull=True).first()

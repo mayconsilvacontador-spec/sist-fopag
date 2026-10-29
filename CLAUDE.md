@@ -54,6 +54,15 @@ Documentação de referência: `README.md` (instalação), `docs/ARQUITETURA.md`
     `previdencia/salarios/import-lote/`, gravação em blocos). Bases fictícias de teste (fora do repositório):
     `Downloads\base_ficticia_sprev` (1ª) e `Downloads\base_ficticia_v2` (segurados por cenário, salários em lote,
     fatores fictícios; ver LEIA-ME.txt).
+    **Legislação de cada RPPS** (`previdencia/legislacao.py`, tela Gestão Previdenciária › Legislação do RPPS):
+    `LegalNorm` (norma do ente com PDF, assuntos, vigência; `citation`), `RetirementRule.norm`/`package`; PACOTES-modelo
+    em `rules.PACKAGES`/`package_rules` (EC103 = adota a União com corte na data da reforma; SEM_REFORMA = CF 40/EC 41/
+    EC 47 sem data de corte; REFORMA_PROPRIA = EC 103 como modelo a ajustar) — sem citação fixa de ente (`_LOCAL` remove
+    a do modelo de Barra Mansa; norma escolhida vira "c/c <norma>"). `apply_package` (endpoint
+    `previdencia/pacotes-regras/`, justificativa): mesmo código = atualiza (auditoria), fora do pacote = inativa, grava
+    `previdencia.vigencia_reforma_local`. Concessão: `local_legal_basis` = norma da regra ou `main_norm` (sem texto fixo);
+    documentos usam `{cidade}` (Institution.city); compulsória sem data de reforma = regra antiga. Próximas etapas:
+    escolhas de cálculo configuráveis (média, pensão, compulsória), fluxo da concessão configurável, casos de conferência.
     Regras carregadas por `manage.py seed_rules --institution PREVIBAM --reforma 2025-06-15` (também cria o
     parâmetro `rgps.teto` 2023–2025 e as séries históricas `rgps.teto` 1994–2022 e `salario_minimo` 1994–2026 —
     a conferir com a norma oficial; anos seguintes devem ser cadastrados em Parâmetros).
@@ -109,12 +118,20 @@ Documentação de referência: `README.md` (instalação), `docs/ARQUITETURA.md`
     `link.base_salary`, faltas do histórico funcional, RPPS = `folha.aliquota_segurado` (teto do RGPS se previdência
     complementar), patronal informativa (`arrecadacao.aliquota_patronal`), IRRF via `folha.tax.compute_ir`.
     FICHA FINANCEIRA (`pessoal/ficha.py`, módulo `ativos.ficha_financeira`, endpoints `ativos/ficha-financeira/…`):
-    importação do sistema anterior (`FinancialImport`/`FinancialLine`, leiaute `COLUMNS`, modelo Excel; conferir →
+    importação do sistema anterior (`FinancialImport`/`FinancialLine`, leiaute `COLUMNS`, modelo Excel, ou PDF da
+    FICHA FINANCEIRA ANUAL com texto digital lido por `pessoal/ficha_pdf.py` — uma página por ano, valor na coluna
+    cujo título termina mais perto, conferido com Total/TOTAL PROVENTOS/DESCONTOS/LÍQUIDOS → `avisos`; conferir →
     gravar; repetir atualiza; `CLASSIFICACAO` CONTRIB_RPPS/BASE_RPPS/PATRONAL/IRRF, sugerida pelo nome e corrigível em
     `classificar/`), ficha anual rubrica × mês juntando contracheques da Folha de Ativos (prevalecem) e linhas importadas
     (Excel), CONTROLE DA CONTRIBUIÇÃO por competência (base, descontado, devido = base × `folha.aliquota_segurado`,
     diferença, patronal, repasse do órgão = `financeiro.Contribution` SERVIDOR + receitas) e `to_history` (bases →
-    salários de contribuição, sem alterar os existentes). Telas: Pasta › Remuneração e Folha de Ativos › Ficha financeira.
+    salários de contribuição, sem alterar os existentes). BASE: linha de base (BASE_RPPS) > soma dos proventos `INCIDE_RPPS`
+    > desconto ÷ alíquota (cálculo inverso, "estimada"); diferença > R$ 1 entre base e base pelo desconto vira aviso.
+    `infer_incidence` (endpoint `<pessoa>/descobrir-base/`) acha a combinação única de proventos = desconto ÷ alíquota
+    em cada competência e sugere as rubricas presentes em ≥ 80% (só sugere; POST classifica). RELATÓRIOS DO DIPR em
+    `reports/dipr.py` (`dipr-analitico` com subtotal por órgão — linha `_subtotal` em negrito na tela e no Excel —
+    e `dipr-resumo` órgão × plano × categoria): ativos da Folha de Ativos ou da ficha importada, inativos da folha de
+    benefícios (órgão = vínculo da concessão), dependentes vigentes na competência (uma vez por pessoa). Telas: Pasta › Remuneração e Folha de Ativos › Ficha financeira.
     `add_manual` (endpoint `<pessoa>/lancar/`): lança competência sem arquivo (base, alíquota, descontado; opcional no
     histórico). O controle também mostra os meses do histórico contributivo sem ficha (fonte HISTORICO, "desconto não
     informado"). ALÍQUOTAS: `financeiro/aliquotas.py`, tela Arrecadação › Alíquotas (`arrecadacao/aliquotas/`, módulo
@@ -189,6 +206,15 @@ Documentação de referência: `README.md` (instalação), `docs/ARQUITETURA.md`
   esperados, comparação com o Cadastro Único). `apply` só com tudo conferido e sem erro: pessoa (só completa campos
   vazios; diferenças listadas), vínculo (órgão escolhido), CTC → averbação ou faltas do vínculo, PDFs nos documentos
   da pessoa. Testes trocam `reader.read_pdf` por leitura fictícia. `X-Frame-Options: SAMEORIGIN` (PDF ao lado).
+  **Processo DIGITALIZADO** (`leitura/implantacao.py`, cards `OrganizeCard`/`ImplantCard` em
+  `components/leitura/processo.tsx`): etapa 1 = juntar leituras do mesmo processo (`juntar/`, arquivos mudam de
+  leitura sem reler; as outras ficam DESCARTADO "juntada em"), acrescentar PDFs (`arquivos/`), escolher a pessoa quando
+  não há CPF (`pessoa/`; `apply` usa `job.person`); todo PDF vai à pasta certa (`DOC_MAP`). Etapa 2 = implantar
+  APOSENTADORIA JÁ CONCEDIDA (`implantacao/` = sugestões; `implantar/` exige `concessao.implantacao:aprovar` + senha):
+  processo no Protocolo CONCLUÍDO com nº original, `Concession` stage IMPLANTADO (analysis.origem
+  PROCESSO_DIGITALIZADO, passo IMPLANTACAO, dados do TCE), `Parcel`, `Benefit` com **`paid_until`** (o motor da folha só
+  gera retroativo depois desse mês), vínculo → APOSENTADO. Valor sugerido = contracheque de INATIVO mais recente.
+  Pensão (instituidor/cotas) e modo em lote ficam para as etapas 3 e 4. `_money` aceita 1.234,56.
 - `reports` (relatórios): catálogo em `apps/reports/registry.py` (`@report(codigo, modulo, titulo, descricao, filtros)`
   → colunas/linhas/totais); definições em `definitions.py` (previdenciários, benefícios, folha, financeiros, gerenciais,
   estatísticos, eSocial) e nos apps (ex.: `provadevida/reports.py`). Tela genérica `components/reports/reports-page.tsx`

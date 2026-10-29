@@ -21,7 +21,7 @@ def create_access(institution, person) -> tuple[PortalAccess, str]:
     if person.death_date:
         raise BusinessRuleError("Pessoa com óbito registrado não recebe acesso ao portal.")
     if not person.name:
-        raise BusinessRuleError("Complete o nome da pessoa no Cadastro Único antes de criar o acesso.")
+        raise BusinessRuleError("Complete o nome da pessoa no cadastro antes de criar o acesso.")
     password = generate_temporary_password()
     access = PortalAccess.objects.filter(institution=institution, person=person).select_related("user").first()
     if access:
@@ -35,7 +35,7 @@ def create_access(institution, person) -> tuple[PortalAccess, str]:
         log_event("UPDATE", module="portal", obj=access, object_repr=f"Portal — nova senha provisória ({person.name})")
         return access, password
     user = User.objects.create(
-        # CPF não é gravado no usuário (é único entre usuários internos); o vínculo é a pessoa do Cadastro Único
+        # CPF não é gravado no usuário (é único entre usuários internos); o vínculo é a pessoa do cadastro
         username=f"portal-{institution.short_name.lower()}-{person.cpf}", full_name=person.name,
         email=person.email or "", is_portal=True, must_change_password=True, default_institution=institution)
     user.set_password(password)

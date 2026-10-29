@@ -1,4 +1,4 @@
-"""Regras do Recadastramento (campanha por ato do órgão; nada vai ao Cadastro Único sem conferência da equipe)."""
+"""Regras do Recadastramento (campanha por ato do órgão; nada vai ao cadastro sem conferência da equipe)."""
 import hashlib
 from datetime import date
 
@@ -216,7 +216,7 @@ def _followups(item) -> str:
 
 @transaction.atomic
 def approve(item, user, note: str = ""):
-    """Aplica no Cadastro Único só o que mudou (endereço ganha nova vigência; o resto fica na auditoria)."""
+    """Aplica no cadastro só o que mudou (endereço ganha nova vigência; o resto fica na auditoria)."""
     from django.core.files.uploadedfile import SimpleUploadedFile
 
     from apps.people.models import Address, Document

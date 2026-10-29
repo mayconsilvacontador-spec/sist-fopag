@@ -141,7 +141,7 @@ def pessoas_sem_nome(institution):
     return [AlertSpec(
         Severity.ATENCAO, f"{n} pessoa(s) importada(s) sem nome",
         "A base SPREV não traz o nome das pessoas. Complete pela consulta à Receita Federal "
-        "(Cadastro Único › Completar nomes) ou edite cada cadastro.",
+        "(pesquisa do topo › Servidores e beneficiários › Completar nomes) ou edite cada cadastro.",
         module="cadastros.segurados", link="/cadastros/segurados?sem_nome=1",
     )]
 

@@ -30,7 +30,7 @@ function Dependents() {
     <>
       <PageHeader
         title="Dependentes"
-        description="Todas as relações de dependência. Para incluir, abra o titular no Cadastro Único › aba Dependentes."
+        description="Todas as relações de dependência. Para incluir, abra a Pasta do Servidor do titular › aba Dependentes."
         breadcrumb={[{ label: "Gestão de Cadastros" }, { label: "Dependentes" }]}
       />
       <Card>

@@ -140,7 +140,7 @@ function Detail({ id }: { id: string }) {
             <Card>
               <CardHeader><CardTitle>Pensão — dependentes e cotas</CardTitle></CardHeader>
               <CardContent className="space-y-2 text-xs">
-                <p>Óbito do instituidor em <b>{formatDate(c.death_date)}</b>. O cálculo usa os dependentes habilitados à pensão no Cadastro Único na data do óbito.</p>
+                <p>Óbito do instituidor em <b>{formatDate(c.death_date)}</b>. O cálculo usa os dependentes habilitados à pensão no cadastro na data do óbito.</p>
                 <Button size="sm" onClick={() => run("calculate", {}, "Pensão calculada.").catch(() => undefined)}><Calculator /> {c.stage === "CALCULADO" ? "Recalcular" : "Calcular pensão"}</Button>
               </CardContent>
             </Card>

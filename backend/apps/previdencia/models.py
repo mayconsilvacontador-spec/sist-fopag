@@ -113,6 +113,58 @@ class CorrectionFactor(InstitutionScopedModel):
         ]
 
 
+class NormKind(models.TextChoices):
+    EMENDA_LOM = "EMENDA_LOM", "Emenda à Lei Orgânica"
+    LEI_ORGANICA = "LEI_ORGANICA", "Lei Orgânica / Constituição Estadual"
+    LEI_COMPLEMENTAR = "LEI_COMPLEMENTAR", "Lei Complementar"
+    LEI = "LEI", "Lei"
+    DECRETO = "DECRETO", "Decreto"
+    PORTARIA = "PORTARIA", "Portaria"
+    RESOLUCAO = "RESOLUCAO", "Resolução"
+    EMENDA_CF = "EMENDA_CF", "Emenda Constitucional (federal)"
+    OUTRO = "OUTRO", "Outra norma"
+
+
+NORM_SUBJECTS = {"APOSENTADORIA": "Aposentadoria", "PENSAO": "Pensão por morte", "CONTRIBUICAO": "Contribuições e alíquotas",
+                 "ORGANIZACAO": "Organização do RPPS", "FOLHA": "Folha e benefícios", "OUTRO": "Outro assunto"}
+
+
+class LegalNorm(InstitutionScopedModel):
+    """Norma da legislação própria do ente/RPPS (lei, emenda à lei orgânica, decreto...). Cada regra de aposentadoria
+    pode apontar para a norma que a fundamenta; a citação sai na portaria, no parecer e na Ficha FATIMA."""
+
+    kind = models.CharField("tipo", max_length=20, choices=NormKind.choices)
+    number = models.CharField("número", max_length=30)
+    date = models.DateField("data da norma", null=True, blank=True)
+    publication_date = models.DateField("data da publicação", null=True, blank=True)
+    valid_from = models.DateField("vigência a partir de", null=True, blank=True)
+    valid_to = models.DateField("vigência até", null=True, blank=True)
+    summary = models.CharField("ementa / resumo", max_length=500, blank=True)
+    subjects = models.JSONField("assuntos", default=list, blank=True)
+    url = models.URLField("endereço na internet", blank=True)
+    file = models.FileField("arquivo (PDF)", upload_to="legislacao/%Y/", blank=True)
+    file_name = models.CharField("nome do arquivo", max_length=255, blank=True)
+    sha256 = models.CharField("hash do arquivo", max_length=64, blank=True)
+    active = models.BooleanField("ativa", default=True)
+
+    class Meta:
+        db_table = "legal_norms"
+        verbose_name = "norma da legislação do RPPS"
+        ordering = ["-date", "kind", "number"]
+
+    @property
+    def citation(self) -> str:
+        when = f", de {self.date.day} de {MONTHS_PT[self.date.month - 1]} de {self.date.year}" if self.date else ""
+        return f"{self.get_kind_display()} nº {self.number}{when}"
+
+    def __str__(self):
+        return self.citation
+
+
+MONTHS_PT = ["janeiro", "fevereiro", "março", "abril", "maio", "junho", "julho", "agosto", "setembro", "outubro",
+             "novembro", "dezembro"]
+
+
 class RetirementRule(InstitutionScopedModel):
     """
     Regra de aposentadoria versionada. `engine` identifica a lógica no código
@@ -137,6 +189,9 @@ class RetirementRule(InstitutionScopedModel):
     gives_permanence_bonus = models.BooleanField("dá direito a abono de permanência", default=True)
     notes = models.TextField("observações", blank=True)
     active = models.BooleanField("ativa", default=True)
+    norm = models.ForeignKey(LegalNorm, on_delete=models.PROTECT, null=True, blank=True, related_name="rules",
+                             verbose_name="norma local que fundamenta a regra")
+    package = models.CharField("pacote de origem", max_length=20, blank=True)
 
     class Meta:
         db_table = "retirement_rules"

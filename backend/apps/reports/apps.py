@@ -7,4 +7,4 @@ class ReportsConfig(AppConfig):
     verbose_name = "Relatórios"
 
     def ready(self):
-        from . import definitions  # noqa: F401  (registra os relatórios)
+        from . import definitions, dipr  # noqa: F401  (registra os relatórios)

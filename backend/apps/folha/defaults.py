@@ -68,7 +68,7 @@ def seed_payroll(institution) -> dict:
     if not Parameter.objects.filter(institution=institution, key=RATE_PARAM).exists():
         set_parameter(institution, RATE_PARAM, "0.14", date(2025, 9, 1),
                       description="Alíquota de contribuição de servidores, aposentados e pensionistas "
-                                  "(Emenda à LOM 28/2025 — 14% a partir de 01/09/2025)")
+                                  "(sugestão: 14% — confira a lei do ente em Arrecadação › Alíquotas)")
         created["parametros"].append(RATE_PARAM)
     if not Parameter.objects.filter(institution=institution, key=MARGIN_PARAM).exists():
         set_parameter(institution, MARGIN_PARAM, "0.35", date(2020, 1, 1),

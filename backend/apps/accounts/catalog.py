@@ -87,7 +87,7 @@ MODULES: list[ModuleDef] = [
     _m("protocolo.processos", "Processos (Protocolo)", "protocolo", [V, I, E, FECH, REAB, EXP], 2, True),
     _m("protocolo.configuracao", "Configuração do Protocolo", "protocolo", CRUD, 2, True),
     # Cadastros
-    _m("cadastros.segurados", "Cadastro Único (pessoas)", "cadastros", CRUD_EXP, 2, True),
+    _m("cadastros.segurados", "Cadastro de pessoas (servidores e beneficiários)", "cadastros", CRUD_EXP, 2, True),
     _m("cadastros.dependentes", "Dependentes", "cadastros", CRUD_EXP, 2, True),
     _m("cadastros.importacao", "Importação de segurados", "cadastros", [V, I], 2, True),
     _m("cadastros.instituidores", "Instituidores", "cadastros", CRUD_EXP, 4),

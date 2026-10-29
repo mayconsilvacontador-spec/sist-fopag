@@ -15,12 +15,14 @@ Cada RetirementRule guarda em `params` os requisitos; este motor os interpreta:
     ingresso_servico_publico_ate  "2003-12-31"
     ingresso_ente_antes_de        "2025-06-15"
 
-Sexo no Cadastro Único (SPREV): 1 = feminino (F), 2 = masculino (M).
+Sexo no cadastro (SPREV): 1 = feminino (F), 2 = masculino (M).
 """
-from django.utils import timezone
+import re
 from dataclasses import dataclass, field
 from datetime import date, timedelta
 from decimal import ROUND_HALF_UP, Decimal
+
+from django.utils import timezone
 
 from .tempo import DAYS_YEAR, PersonTime
 
@@ -345,3 +347,46 @@ def seed_rules(institution, reform: date) -> int:
         _, c = RetirementRule.objects.get_or_create(institution=institution, code=code, defaults=data)
         created += int(c)
     return created
+
+
+# ---------------------------------------------------------------- pacotes-modelo (qualquer ente federativo)
+PACKAGES = {
+    "EC103": {"label": "Reforma adotando as regras da EC 103 (União)", "needs_reform": True,
+              "description": "O ente aprovou norma própria adotando as regras da EC 103/2019. Regras antigas (CF art. 40, "
+                             "EC 41 e EC 47) valem só para quem cumpriu os requisitos até a véspera da vigência local; "
+                             "a partir dela, transições (pontos, pedágio, especial) e regra permanente."},
+    "SEM_REFORMA": {"label": "Sem reforma local (regras anteriores à EC 103)", "needs_reform": False,
+                    "description": "O ente ainda não fez a reforma: continuam valendo a CF art. 40 (redação da EC 41), as "
+                                   "transições da EC 41 (arts. 2º e 6º) e da EC 47 (art. 3º), média de 80% (Lei 10.887)."},
+    "REFORMA_PROPRIA": {"label": "Reforma própria (modelo para ajustar)", "needs_reform": True,
+                        "description": "O ente fez reforma com idades, tempos ou pontos diferentes dos da União. O sistema "
+                                       "cria as regras da EC 103 como ponto de partida — ajuste cada uma conforme a lei local "
+                                       "em Regras de Aposentadoria antes de usar."},
+}
+_LOCAL = re.compile(r"\s*\((?:Emenda à LOM 28/2025|Emenda 28)[^)]*\)")
+
+
+def package_rules(package: str, reform: date | None, local: str = "") -> list[dict]:
+    """Regras do pacote, sem nenhuma citação fixa de um ente. `local` = citação da norma local (opcional)."""
+    if package not in PACKAGES:
+        raise ValueError("pacote inválido")
+    if PACKAGES[package]["needs_reform"] and reform is None:
+        raise ValueError("informe a data de vigência da reforma local")
+    base = default_rules(reform or date(2100, 1, 1))
+    out = []
+    for r in base:
+        r = dict(r, params=dict(r["params"]))
+        r["legal_basis"] = _LOCAL.sub("", r["legal_basis"]).strip()
+        if package == "SEM_REFORMA":
+            if r["group"] not in ("DIREITO_ADQUIRIDO", "COMPULSORIA"):
+                continue
+            r["valid_to"] = None  # sem reforma, as regras antigas continuam valendo
+            if r["group"] == "DIREITO_ADQUIRIDO":
+                r["group"] = "TRANSICAO" if r["code"].startswith(("EC41", "EC47")) else "PERMANENTE"
+        elif local and r["group"] in ("TRANSICAO", "PERMANENTE"):
+            r["legal_basis"] = f"{r['legal_basis']} c/c {local}"[:255]
+        if package == "REFORMA_PROPRIA" and r["group"] in ("TRANSICAO", "PERMANENTE"):
+            r["notes"] = ("MODELO DA EC 103 — confira idades, tempos, pontos e pedágio com a lei local antes de usar. "
+                          + r.get("notes", "")).strip()
+        out.append(r)
+    return out

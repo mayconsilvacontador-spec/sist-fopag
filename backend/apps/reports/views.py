@@ -116,6 +116,8 @@ def _xlsx(data, name):
         for i, c in enumerate(cols, 1):
             if c["tipo"] in fmt:
                 ws.cell(ws.max_row, i).number_format = fmt[c["tipo"]]
+            if row.get("_subtotal"):  # subtotal (ex.: por órgão) em negrito
+                ws.cell(ws.max_row, i).font = Font(bold=True)
     if data["totais"]:
         ws.append([_cell(data["totais"].get(c["key"]), c["tipo"]) if c["key"] in data["totais"] else ""
                    for c in cols])

@@ -89,7 +89,7 @@ export function SimulacaoPanel({ personId }: { personId: string }) {
         );
       })}
       <p className="text-2xs text-muted-foreground">
-        Simulação com base nos dados do Cadastro Único, averbações e histórico contributivo. Não substitui a análise do processo de concessão.
+        Simulação com base nos dados do cadastro, averbações e histórico contributivo. Não substitui a análise do processo de concessão.
         Aposentadoria da pessoa com deficiência (EC 103, art. 22 — LC 142/2013) depende de avaliação biopsicossocial e não é simulada.
       </p>
     </div>

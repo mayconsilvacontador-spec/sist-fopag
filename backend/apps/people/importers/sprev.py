@@ -282,9 +282,9 @@ class SprevImporter(ComplementMixin):
             person.is_invalid = True
             changed.append("is_invalid")
         if birth and person.birth_date != birth:
-            self._msg("avisos", name, line, cpf, "data de nascimento diverge do Cadastro Único (mantida a atual)")
+            self._msg("avisos", name, line, cpf, "data de nascimento diverge do cadastro (mantida a atual)")
         if sex and person.sex != sex:
-            self._msg("avisos", name, line, cpf, "sexo diverge do Cadastro Único (mantido o atual)")
+            self._msg("avisos", name, line, cpf, "sexo diverge do cadastro (mantido o atual)")
         if changed:
             person.save()
             self.report.resumo["pessoas_completadas"] += 1
@@ -447,7 +447,7 @@ class SprevImporter(ComplementMixin):
         holder_cpf = _cpf(row.get("ID_SEGURADO_CPF"))
         holder = Person.objects.filter(institution=self.inst, cpf=holder_cpf).first() if holder_cpf else None
         if holder is None:
-            raise RowError("segurado titular (ID_SEGURADO_CPF) não está no Cadastro Único — importe antes o "
+            raise RowError("segurado titular (ID_SEGURADO_CPF) não está no cadastro — importe antes o "
                            "arquivo de Servidores/Aposentados")
         kind = _int(row.get("CO_TIPO_DEPENDECIA"), {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 99})
         if kind is None:

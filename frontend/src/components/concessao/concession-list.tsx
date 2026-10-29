@@ -150,7 +150,7 @@ function OpenDialog({ defaultKind, onClose, onOpened }: { defaultKind: Kind; onC
           </div>) : (<div>
             <div className="mb-1 text-xs font-medium text-foreground/80">{kind === "PENSAO" ? "Instituidor (servidor/aposentado falecido)" : "Servidor"}</div>
             <PersonPicker value={person} onChange={(p) => { setPerson(p); setProcessId(""); }} />
-            {kind === "PENSAO" && <p className="mt-1 text-2xs text-muted-foreground">A data do óbito deve estar no Cadastro Único do instituidor.</p>}
+            {kind === "PENSAO" && <p className="mt-1 text-2xs text-muted-foreground">A data do óbito deve estar no cadastro do instituidor.</p>}
           </div>)}
           <FormField label="Processo do Protocolo" htmlFor="o-proc" hint={interestedId ? "Processos em tramitação em que a pessoa é interessada." : "Escolha a pessoa ou busque pelo número."}>
             {!interestedId && <Input id="o-proc-search" className="mb-2" value={procSearch} onChange={(e) => setProcSearch(e.target.value)} placeholder="Nº do processo (ex.: 000012/2026)" />}

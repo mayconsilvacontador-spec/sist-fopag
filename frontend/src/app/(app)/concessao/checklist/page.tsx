@@ -69,7 +69,7 @@ function Templates() {
     { name: "modality", label: "Só para a modalidade", type: "select", options: MODALITIES, hint: "Só aposentadoria." },
     { name: "source", label: "Origem", type: "select", required: true, options: [{ value: "ANEXO", label: "Anexar documento" }, { value: "SISTEMA", label: "Gerado pelo sistema" }] },
     { name: "system_kind", label: "Documento do sistema", type: "select", options: SYSTEM_DOCS, hint: "Só quando a origem é “gerado pelo sistema”." },
-    { name: "person_doc_type", label: "Guardar também no Cadastro Único como", type: "select", options: PERSON_DOCS, hint: "Ao anexar, o arquivo vira uma nova versão nos documentos da pessoa." },
+    { name: "person_doc_type", label: "Guardar também no cadastro como", type: "select", options: PERSON_DOCS, hint: "Ao anexar, o arquivo vira uma nova versão nos documentos da pessoa." },
     { name: "order", label: "Ordem", type: "number" },
     { name: "required", label: "Obrigatório (trava a liberação do setor)", type: "checkbox" },
     { name: "active", label: "Ativo", type: "checkbox" },

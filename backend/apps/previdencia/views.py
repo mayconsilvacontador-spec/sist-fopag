@@ -13,7 +13,7 @@ from apps.core.views import InstitutionScopedMixin, get_justification
 from apps.people.models import Person
 
 from . import services
-from .models import Averbacao, ContributionSalary, CorrectionFactor, Ctc, CtcStatus, RetirementRule
+from .models import Averbacao, ContributionSalary, CorrectionFactor, Ctc, CtcStatus, LegalNorm, RetirementRule
 from .serializers import AverbacaoSerializer, ContributionSalarySerializer, CtcSerializer, RetirementRuleSerializer
 
 
@@ -217,3 +217,91 @@ class CtcViewSet(InstitutionScopedMixin, mixins.ListModelMixin, mixins.RetrieveM
         ctc.save()
         log_event("CANCEL", module="previdenciaria.ctc", obj=ctc, justification=just)
         return Response(self.get_serializer(ctc).data)
+
+
+class LegalNormViewSet(InstitutionScopedMixin, mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
+    """Legislação do RPPS. POST cria (multipart: campos + file PDF); POST {id}/salvar/ altera; POST {id}/inativar/;
+    GET {id}/arquivo/. Sem exclusão (regras e concessões citam a norma)."""
+
+    module_code = "previdenciaria.regras"
+    queryset = LegalNorm.objects.all()
+    pagination_class = None
+    parser_classes = [MultiPartParser, FormParser, JSONParser]
+    action_permissions = {"create": "incluir", "salvar": "editar", "inativar": "editar", "arquivo": "visualizar"}
+
+    def get_serializer_class(self):
+        from .serializers import LegalNormSerializer
+
+        return LegalNormSerializer
+
+    @staticmethod
+    def _data(request):
+        d = request.data
+        subjects = d.getlist("subjects") if hasattr(d, "getlist") else d.get("subjects") or []
+        if len(subjects) == 1 and "," in subjects[0]:
+            subjects = subjects[0].split(",")
+        return {**{k: d.get(k) for k in ("kind", "number", "date", "publication_date", "valid_from", "valid_to",
+                                         "summary", "url")}, "subjects": subjects}
+
+    def create(self, request, *args, **kwargs):
+        from .legislacao import save_norm
+        from .serializers import LegalNormSerializer
+
+        n = save_norm(self.get_institution(), self._data(request), request.FILES.get("file"))
+        return Response(LegalNormSerializer(n).data, status=201)
+
+    @action(detail=True, methods=["post"])
+    def salvar(self, request, pk=None):
+        from .legislacao import save_norm
+        from .serializers import LegalNormSerializer
+
+        n = save_norm(self.get_institution(), self._data(request), request.FILES.get("file"), norm=self.get_object())
+        return Response(LegalNormSerializer(n).data)
+
+    @action(detail=True, methods=["post"])
+    def inativar(self, request, pk=None):
+        from .serializers import LegalNormSerializer
+
+        n = self.get_object()
+        n.active = not n.active
+        n.save(update_fields=["active", "updated_at"])
+        log_event("UPDATE", module="previdenciaria.regras", obj=n,
+                  object_repr=f"Legislação do RPPS — {n.citation} {'reativada' if n.active else 'inativada'}")
+        return Response(LegalNormSerializer(n).data)
+
+    @action(detail=True, methods=["get"])
+    def arquivo(self, request, pk=None):
+        from django.http import FileResponse, Http404
+
+        n = self.get_object()
+        if not n.file:
+            raise Http404
+        resp = FileResponse(n.file.open("rb"), content_type="application/pdf")
+        resp["Content-Disposition"] = "inline; filename=norma.pdf"
+        return resp
+
+
+class RulePackagesView(InstitutionScopedMixin, APIView):
+    """GET pacotes-modelo e situação; POST {pacote, reforma (AAAA-MM-DD), norma, justificativa} aplica o pacote."""
+
+    module_code = "previdenciaria.regras"
+    action_permissions = {"GET": "visualizar", "POST": "editar"}
+
+    def get(self, request):
+        from .legislacao import packages_info
+
+        return Response(packages_info(self.get_institution()))
+
+    def post(self, request):
+        from .legislacao import apply_package
+
+        inst, d = self.get_institution(), request.data
+        reform = None
+        if d.get("reforma"):
+            try:
+                reform = date.fromisoformat(str(d["reforma"])[:10])
+            except ValueError:
+                raise BusinessRuleError("Data da reforma inválida.")
+        norm = LegalNorm.objects.filter(institution=inst, pk=d.get("norma")).first() if d.get("norma") else None
+        return Response(apply_package(inst, str(d.get("pacote") or ""), reform=reform, norm=norm,
+                                      justification=str(d.get("justificativa") or ""), user=request.user))

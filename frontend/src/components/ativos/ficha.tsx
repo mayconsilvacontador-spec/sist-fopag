@@ -2,7 +2,7 @@
 
 import { Fragment, useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import useSWR from "swr";
+import useSWR, { useSWRConfig } from "swr";
 import { toast } from "sonner";
 import { AlertTriangle, CheckCircle2, Download, FileSpreadsheet, History, Loader2, Percent, Plus, Upload } from "lucide-react";
 
@@ -22,6 +22,7 @@ const MESES = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "O
 const CATEGORIAS = [
   { value: "", label: "Outras" },
   { value: "CONTRIB_RPPS", label: "Contribuição do servidor ao RPPS" },
+  { value: "INCIDE_RPPS", label: "Provento que entra na base RPPS" },
   { value: "BASE_RPPS", label: "Base de contribuição RPPS" },
   { value: "PATRONAL", label: "Patronal (informativa)" },
   { value: "IRRF", label: "IRRF" },
@@ -30,8 +31,8 @@ const CATEGORIAS = [
 type Rubrica = { codigo: string; rubrica: string; natureza: string; classificacao: string; total?: string };
 type Resultado = {
   linhas: number; incluidas: number; atualizadas: number; total_erros: number; servidores: number; gravado: boolean;
-  periodo: [string, string] | null; erros: { linha: number; mensagem: string }[]; rubricas: Rubrica[];
-  sem_classificacao_rpps: boolean;
+  periodo: [string, string] | null; erros: { linha: number; mensagem: string; onde?: string }[]; rubricas: Rubrica[];
+  sem_classificacao_rpps: boolean; avisos?: string[]; pdf?: { paginas: number; anos: number[] } | null;
 };
 type Ficha = {
   ano: number; matriculas: string[]; fontes: string[]; anos: number[];
@@ -40,7 +41,7 @@ type Ficha = {
 };
 type Contrib = {
   competencias: {
-    competencia: string; folha: string; matricula: string; orgao: string; fonte: string; base: string; base_estimada: boolean;
+    competencia: string; folha: string; matricula: string; orgao: string; fonte: string; base: string; base_estimada: boolean; base_origem?: string; base_pelo_desconto?: string | null;
     descontado: string; aliquota_aplicada: string | null; aliquota_legal: string | null; devido: string | null;
     diferenca: string | null; patronal: string | null; avisos: string[];
     repasse_orgao: { situacao: string; devido: string | null; pago: string | null };
@@ -51,10 +52,17 @@ type Contrib = {
 const money = (v?: string | null) => (v ? formatCurrency(v) : "");
 
 /** Importação da ficha financeira (validar → conferir → gravar). Com `personId`, só aceita linhas desse servidor. */
+/** Recarrega todos os quadros da ficha financeira (ficha anual, contribuições, rubricas) após importar ou reclassificar. */
+function useRefreshFicha() {
+  const { mutate } = useSWRConfig();
+  return () => mutate((key) => typeof key === "string" && key.startsWith(BASE));
+}
+
 export function FichaImport({ personId, onDone }: { personId?: string; onDone?: () => void }) {
   const ref = useRef<HTMLInputElement>(null);
   const [busy, setBusy] = useState(false);
   const [res, setRes] = useState<Resultado | null>(null);
+  const refreshAll = useRefreshFicha();
 
   const send = async (confirmar: boolean) => {
     const file = ref.current?.files?.[0];
@@ -72,6 +80,7 @@ export function FichaImport({ personId, onDone }: { personId?: string; onDone?: 
       if (confirmar) {
         toast.success(`Ficha importada: ${body.incluidas} linha(s) nova(s), ${body.atualizadas} atualizada(s).`);
         if (ref.current) ref.current.value = "";
+        refreshAll();
         onDone?.();
       }
     } catch (err) {
@@ -86,7 +95,7 @@ export function FichaImport({ personId, onDone }: { personId?: string; onDone?: 
       <div className="flex flex-wrap items-center gap-2">
         <FileSpreadsheet className="h-5 w-5 text-primary" />
         <span className="font-semibold">Importar ficha financeira</span>
-        <span className="text-xs text-muted-foreground">(do sistema anterior; uma linha por rubrica de cada mês)</span>
+        <span className="text-xs text-muted-foreground">(do sistema anterior: tabela padrão em Excel/CSV ou o PDF da ficha financeira anual)</span>
         <div className="flex-1" />
         <Button variant="outline" size="sm"
           onClick={() => download(`${BASE}/modelo`, "SIST_tabela_padrao_ficha_financeira.xlsx").catch((e) => toast.error((e as Error).message))}>
@@ -94,7 +103,7 @@ export function FichaImport({ personId, onDone }: { personId?: string; onDone?: 
         </Button>
       </div>
       <div className="mt-2 flex flex-wrap items-center gap-2">
-        <input ref={ref} type="file" accept=".csv,.txt,.xlsx" className="text-xs" onChange={() => setRes(null)} />
+        <input ref={ref} type="file" accept=".csv,.txt,.xlsx,.pdf" className="text-xs" onChange={() => setRes(null)} />
         <Button size="sm" variant="outline" onClick={() => send(false)} disabled={busy}>
           {busy ? <Loader2 className="animate-spin" /> : <CheckCircle2 />} Conferir arquivo
         </Button>
@@ -110,13 +119,25 @@ export function FichaImport({ personId, onDone }: { personId?: string; onDone?: 
               {res.periodo && ` · ${res.periodo[0]} a ${res.periodo[1]}`}</span>
             {res.total_erros > 0 && <Badge variant="critical">{res.total_erros} com erro (serão ignoradas)</Badge>}
           </div>
+          {res.pdf && (
+            <p className={res.avisos?.length ? "text-warning" : "text-success"}>
+              PDF lido: {res.pdf.paginas} página(s), anos {res.pdf.anos.join(", ")}.{" "}
+              {res.avisos?.length ? "As contas do relatório NÃO bateram nos pontos abaixo — confira antes de gravar:"
+                : "Conferido: soma dos meses, totais de proventos e descontos e líquidos batem com o relatório."}
+            </p>
+          )}
+          {!!res.avisos?.length && (
+            <ul className="max-h-32 overflow-y-auto rounded border border-warning bg-warning-soft/40 p-2 thin-scroll">
+              {res.avisos.map((a, i) => <li key={i}>{a}</li>)}
+            </ul>
+          )}
           {res.sem_classificacao_rpps && (
             <p className="flex items-center gap-1 text-warning"><AlertTriangle className="h-3.5 w-3.5" />
               Nenhuma rubrica foi reconhecida como contribuição ao RPPS. Classifique abaixo, depois de gravar, para o controle funcionar.</p>
           )}
           {res.erros.length > 0 && (
             <ul className="max-h-32 overflow-y-auto rounded border bg-card p-2 thin-scroll">
-              {res.erros.map((e, i) => <li key={i}>Linha {e.linha}: {e.mensagem}</li>)}
+              {res.erros.map((e, i) => <li key={i}>{e.onde || `Linha ${e.linha}`}: {e.mensagem}</li>)}
             </ul>
           )}
           {!res.gravado && res.rubricas.length > 0 && (
@@ -133,12 +154,14 @@ export function FichaImport({ personId, onDone }: { personId?: string; onDone?: 
 /** Classificação das rubricas importadas (qual é o desconto previdenciário, a base, a patronal e o IRRF). */
 export function RubricClassification({ personId }: { personId?: string }) {
   const { can } = useSession();
+  const refreshAll = useRefreshFicha();
   const { data, isLoading, mutate } = useSWR<Rubrica[]>(`${BASE}/rubricas${qs({ pessoa: personId })}`, fetcher);
   const change = async (codigo: string, classificacao: string) => {
     try {
       const r = await api<{ linhas: number }>(`${BASE}/classificar`, { method: "POST", body: { codigo, classificacao, pessoa: personId } });
       toast.success(`Rubrica ${codigo} reclassificada (${r.linhas} linha(s)).`);
       mutate();
+      refreshAll();
     } catch (err) {
       toast.error((err as Error).message);
     }
@@ -316,6 +339,7 @@ export function ContribuicoesPanel({ personId }: { personId: string }) {
         )}
       </div>
       {adding && <LancarCompetencia personId={personId} onDone={() => { setAdding(false); mutate(); }} />}
+      <DescobrirBase personId={personId} />
       <Table>
         <TableHeader>
           <TableRow>
@@ -333,7 +357,12 @@ export function ContribuicoesPanel({ personId }: { personId: string }) {
                 <span className="font-medium">{c.competencia}</span>{c.folha !== "MENSAL" && <Badge variant="neutral" className="ml-1">{c.folha === "DECIMO" ? "13º" : c.folha}</Badge>}
                 <div className="text-2xs text-muted-foreground">mat. {c.matricula || "—"} · {c.fonte === "FOLHA" ? "Folha do SIST" : "importada"}</div>
               </TableCell>
-              <TableCell className="text-right">{money(c.base)}{c.base_estimada && <div className="text-2xs text-muted-foreground">estimada</div>}</TableCell>
+              <TableCell className="text-right">{money(c.base)}
+                <div className="text-2xs text-muted-foreground">
+                  {c.base_origem === "DESCONTO" ? "pelo desconto" : c.base_origem === "RUBRICAS" ? "pelas rubricas" : "informada"}
+                  {c.base_origem !== "DESCONTO" && c.base_pelo_desconto && ` · pelo desconto ${money(c.base_pelo_desconto)}`}
+                </div>
+              </TableCell>
               <TableCell className="text-right font-semibold">{money(c.descontado)}</TableCell>
               <TableCell className="text-right text-xs">{c.aliquota_aplicada ? `${c.aliquota_aplicada}%` : "—"}
                 {c.aliquota_legal && <div className="text-2xs text-muted-foreground">legal {c.aliquota_legal}%</div>}</TableCell>
@@ -355,9 +384,85 @@ export function ContribuicoesPanel({ personId }: { personId: string }) {
         </TableBody>
       </Table>
       <p className="mt-2 text-2xs text-muted-foreground">
+        Base = soma dos proventos classificados como &ldquo;entra na base RPPS&rdquo;; sem essa classificação, base = desconto ÷
+        alíquota (cálculo inverso). Quando as duas não batem, a linha fica amarela: o desconto foi feito sobre outra base.
         Devido = base × alíquota do servidor vigente na competência (Parâmetros). O repasse mostra a guia de contribuição
         dos servidores do órgão naquela competência (Arrecadação) e quanto já foi pago — o órgão repassa em guia única.
       </p>
+    </div>
+  );
+}
+
+type Descoberta = {
+  resolvidas: number; sem_solucao: number;
+  rubricas: { codigo: string; rubrica: string; competencias: number; na_base: number; percentual: number; sugere: boolean }[];
+};
+
+/** Descobre pelo cálculo inverso (desconto ÷ alíquota) quais proventos formam a base e permite classificá-los. */
+function DescobrirBase({ personId }: { personId: string }) {
+  const { can } = useSession();
+  const refreshAll = useRefreshFicha();
+  const [res, setRes] = useState<Descoberta | null>(null);
+  const [sel, setSel] = useState<Set<string>>(new Set());
+  const [busy, setBusy] = useState(false);
+  const run = async () => {
+    setBusy(true);
+    try {
+      const r = await api<Descoberta>(`${BASE}/${personId}/descobrir-base`);
+      setRes(r);
+      setSel(new Set(r.rubricas.filter((x) => x.sugere).map((x) => x.codigo)));
+    } catch (err) {
+      toast.error((err as Error).message);
+    } finally {
+      setBusy(false);
+    }
+  };
+  const apply = async () => {
+    setBusy(true);
+    try {
+      const r = await api<{ linhas: number }>(`${BASE}/${personId}/descobrir-base`, { method: "POST", body: { codigos: [...sel] } });
+      toast.success(`${sel.size} rubrica(s) marcadas como base do RPPS (${r.linhas} lançamento(s)).`);
+      setRes(null);
+      refreshAll();
+    } catch (err) {
+      toast.error((err as Error).message);
+    } finally {
+      setBusy(false);
+    }
+  };
+  if (!res) {
+    return (
+      <div className="mb-2">
+        <Button variant="outline" size="sm" onClick={run} disabled={busy}>
+          {busy ? <Loader2 className="animate-spin" /> : <Percent />} Descobrir rubricas da base (cálculo inverso)
+        </Button>
+      </div>
+    );
+  }
+  return (
+    <div className="mb-3 rounded-lg border bg-muted/30 p-3 text-xs">
+      <p className="mb-2">
+        Em cada competência importada, base = desconto ÷ alíquota da época, e o sistema procurou a combinação de proventos
+        que dá essa soma. <b>{res.resolvidas}</b> competência(s) resolvida(s)
+        {res.sem_solucao > 0 && <>, <b>{res.sem_solucao}</b> sem combinação única (desconto sobre base diferente ou rubricas com valores iguais)</>}.
+        Marque as que entram na base:
+      </p>
+      <div className="grid gap-1 sm:grid-cols-2">
+        {res.rubricas.map((r) => (
+          <label key={r.codigo} className="flex items-center gap-2">
+            <input type="checkbox" checked={sel.has(r.codigo)}
+              onChange={(e) => setSel((s) => { const n = new Set(s); if (e.target.checked) n.add(r.codigo); else n.delete(r.codigo); return n; })} />
+            <span className="font-mono">{r.codigo}</span> {r.rubrica}
+            <span className={r.sugere ? "text-success" : "text-muted-foreground"}>— na base em {r.na_base} de {r.competencias} ({r.percentual}%)</span>
+          </label>
+        ))}
+      </div>
+      <div className="mt-2 flex gap-2">
+        {can("ativos.ficha_financeira", "incluir") && (
+          <Button size="sm" onClick={apply} disabled={busy || !sel.size}><CheckCircle2 /> Classificar {sel.size} rubrica(s) como base</Button>
+        )}
+        <Button size="sm" variant="outline" onClick={() => setRes(null)}>Fechar</Button>
+      </div>
     </div>
   );
 }

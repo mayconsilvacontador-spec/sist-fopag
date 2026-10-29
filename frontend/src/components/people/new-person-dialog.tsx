@@ -17,11 +17,11 @@ import type { PersonRow, ReceitaPerson } from "@/lib/types";
 
 /**
  * Inclusão em 2 passos: primeiro o CPF (reaproveita o cadastro existente —
- * princípio do Cadastro Único), depois os dados. onPicked recebe a pessoa
+ * princípio do cadastro), depois os dados. onPicked recebe a pessoa
  * existente ou a recém-criada.
  */
 export function NewPersonDialog({
-  title = "Nova pessoa no Cadastro Único", onClose, onPicked,
+  title = "Nova pessoa", onClose, onPicked,
 }: {
   title?: string;
   onClose: () => void;
@@ -67,7 +67,7 @@ export function NewPersonDialog({
           <DialogDescription>
             {step === "cpf"
               ? `Informe o CPF. Se a pessoa já estiver cadastrada, o cadastro existente será usado.${me?.integracoes?.receita ? " Se não estiver, os dados são buscados na Receita Federal." : ""}`
-              : "CPF não encontrado no Cadastro Único. Preencha os dados."}
+              : "CPF ainda não cadastrado. Preencha os dados."}
           </DialogDescription>
         </DialogHeader>
         {step === "cpf" ? (

@@ -47,6 +47,8 @@ class ReadingJob(InstitutionScopedModel):
     checks = models.JSONField("conferências automáticas", default=list, blank=True)
     applied_at = models.DateTimeField("aplicado em", null=True, blank=True)
     applied_summary = models.JSONField("o que foi aplicado", default=dict, blank=True)
+    concession = models.ForeignKey("concessao.Concession", on_delete=models.PROTECT, null=True, blank=True,
+                                   related_name="+", verbose_name="benefício implantado a partir desta leitura")
 
     class Meta:
         db_table = "reading_jobs"

@@ -1,7 +1,7 @@
 """
 Vida do servidor: ADMISSÃO (porta de entrada) e CRONOLOGIA (ficha do servidor, da admissão ao óbito/pensão).
 
-A admissão cria, de uma vez: a pessoa no Cadastro Único (ou completa a existente pelo CPF), o vínculo com o cargo,
+A admissão cria, de uma vez: a pessoa no cadastro (ou completa a existente pelo CPF), o vínculo com o cargo,
 o vencimento base, os eventos de NOMEAÇÃO e POSSE/EXERCÍCIO no histórico funcional, o endereço e a conta bancária.
 A cronologia junta tudo o que o sistema já sabe da pessoa, em ordem de data: nascimento, tempo averbado de outros
 regimes, admissões, vida funcional, folhas de ativos, aposentadoria/pensão (concessão, portaria, implantação),
@@ -92,7 +92,7 @@ def admit(institution, data: dict, user) -> dict:
         log_event("CREATE", module="cadastros.segurados", obj=person, object_repr=f"{person.name} (admissão)")
     else:
         if person.death_date:
-            raise BusinessRuleError("Esta pessoa consta como falecida no Cadastro Único.")
+            raise BusinessRuleError("Esta pessoa consta como falecida no cadastro.")
         changed = [k for k, v in fields.items() if not getattr(person, k)]
         for k in changed:
             setattr(person, k, fields[k])

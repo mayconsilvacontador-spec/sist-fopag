@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import useSWR from "swr";
 import { toast } from "sonner";
 import { Loader2, Pencil } from "lucide-react";
@@ -16,7 +17,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import {
   Dialog, DialogBody, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle,
 } from "@/components/ui/dialog";
-import { Checkbox, Textarea } from "@/components/ui/input";
+import { Checkbox, Input, Select, Textarea } from "@/components/ui/input";
 import { api, fetcher } from "@/lib/api";
 import { formatDate } from "@/lib/format";
 import type { RetirementRuleRow } from "@/lib/types";
@@ -63,7 +64,8 @@ function Rules() {
     <>
       <PageHeader
         title="Regras de Aposentadoria"
-        description="Regras do RPPS conforme a Emenda à Lei Orgânica nº 28/2025 (vigente com a LC 106/2025, a partir de 15/06/2025), EC 103/2019 e direito adquirido."
+        description={<>Regras deste RPPS, conforme a legislação do ente. Para começar ou mudar de legislação, aplique um pacote-modelo em{" "}
+          <Link href="/previdenciaria/legislacao" className="font-semibold text-primary hover:underline">Legislação do RPPS</Link>.</>}
         breadcrumb={[{ label: "Gestão Previdenciária" }, { label: "Regras de Aposentadoria" }]}
       />
       {error && <ErrorState error={error} />}
@@ -83,6 +85,7 @@ function Rules() {
                     <div>
                       <div className="text-sm font-semibold">{r.name} {r.for_teacher && <Badge className="ml-1">Professor</Badge>} {!r.active && <Badge variant="neutral">Inativa</Badge>}</div>
                       <div className="text-2xs text-muted-foreground">{r.legal_basis}</div>
+                      {r.norm_citation && <div className="text-2xs text-primary">Norma local: {r.norm_citation}</div>}
                     </div>
                     {can("previdenciaria.regras", "editar") && <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => setEditing(r)} aria-label="Editar"><Pencil /></Button>}
                   </div>
@@ -112,6 +115,10 @@ function EditRule({ rule, onClose, onSaved }: { rule: RetirementRuleRow; onClose
   const [params, setParams] = useState(JSON.stringify(rule.params, null, 2));
   const [active, setActive] = useState(rule.active);
   const [notes, setNotes] = useState(rule.notes);
+  const [legal, setLegal] = useState(rule.legal_basis);
+  const [proventos, setProventos] = useState(rule.proventos);
+  const [norm, setNorm] = useState(rule.norm ?? "");
+  const norms = useSWR<{ id: string; citation: string; active: boolean }[]>("previdencia/legislacao", fetcher);
   const [justification, setJustification] = useState("");
   const [busy, setBusy] = useState(false);
 
@@ -120,7 +127,7 @@ function EditRule({ rule, onClose, onSaved }: { rule: RetirementRuleRow; onClose
     try { parsed = JSON.parse(params); } catch { toast.error("Parâmetros com formato inválido."); return; }
     setBusy(true);
     try {
-      await api(`previdencia/regras/${rule.id}`, { method: "PATCH", body: { params: parsed, active, notes }, justification });
+      await api(`previdencia/regras/${rule.id}`, { method: "PATCH", body: { params: parsed, active, notes, legal_basis: legal, proventos, norm: norm || null }, justification });
       toast.success("Regra atualizada (registrada na auditoria).");
       onSaved();
       onClose();
@@ -139,6 +146,13 @@ function EditRule({ rule, onClose, onSaved }: { rule: RetirementRuleRow; onClose
           <DialogDescription>Altere apenas se a legislação mudar. Toda alteração exige justificativa e fica na auditoria.</DialogDescription>
         </DialogHeader>
         <DialogBody className="space-y-3">
+          <FormField label="Fundamentação" htmlFor="r-legal"><Input id="r-legal" value={legal} onChange={(e) => setLegal(e.target.value)} /></FormField>
+          <FormField label="Norma local" htmlFor="r-norm" hint="Cadastre as normas em Legislação do RPPS.">
+            <Select id="r-norm" value={norm} onChange={(e) => setNorm(e.target.value)}>
+              <option value="">— nenhuma —</option>{norms.data?.filter((n) => n.active || n.id === norm).map((n) => <option key={n.id} value={n.id}>{n.citation}</option>)}
+            </Select>
+          </FormField>
+          <FormField label="Forma de cálculo dos proventos" htmlFor="r-prov"><Input id="r-prov" value={proventos} onChange={(e) => setProventos(e.target.value)} /></FormField>
           <FormField label="Parâmetros (avançado)" htmlFor="r-params" hint="Idades e tempos em anos; F = mulher, M = homem.">
             <Textarea id="r-params" value={params} onChange={(e) => setParams(e.target.value)} className="min-h-[220px] font-mono text-2xs" />
           </FormField>

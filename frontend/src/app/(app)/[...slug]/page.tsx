@@ -13,7 +13,7 @@ import { findScreenByPath } from "@/lib/menu";
 
 const PHASES: Record<number, string> = {
   1: "Arquitetura, acesso, permissões e painel",
-  2: "Cadastro Único, dependentes, vínculos, histórico funcional e documentos",
+  2: "Cadastro de pessoas, dependentes, vínculos, histórico funcional e documentos",
   3: "Gestão Previdenciária, histórico contributivo, CTC, regras e simulações",
   4: "Concessão de Benefícios",
   5: "Motor de Folha",

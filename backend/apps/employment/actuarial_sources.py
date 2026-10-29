@@ -1,5 +1,5 @@
 """
-Origens da base atuarial (leiaute SPREV) a partir do Cadastro Único e dos vínculos:
+Origens da base atuarial (leiaute SPREV) a partir do cadastro e dos vínculos:
 servidores ativos, dependentes e baixas de servidores.
 
 Campos que dependem de módulos futuros ficam em branco e geram pendência:

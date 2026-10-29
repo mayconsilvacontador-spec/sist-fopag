@@ -40,7 +40,7 @@ def pendentes(inst, p):
 
 @report("recadastramento-pendencias-equipe", "recadastramento.pendencias", "Pendências para a equipe",
         "Aprovados que declararam mudança de dependentes, conta bancária, acumulação de cargo ou outro benefício "
-        "(exigem providência no Cadastro Único).", [CAMP], landscape=True)
+        "(exigem providência no cadastro).", [CAMP], landscape=True)
 def pendencias_equipe(inst, p):
     c = _campaign(inst, p)
     qs = c.items.filter(status=Status.APROVADO).exclude(staff_followup="").select_related("person").order_by("person__name")

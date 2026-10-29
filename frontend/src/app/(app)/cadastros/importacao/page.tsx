@@ -169,7 +169,7 @@ function Importer() {
         onOpenChange={(v) => !v && setConfirm(null)}
         title={confirm === "confirm" ? "Confirmar importação" : "Descartar lote"}
         description={confirm === "confirm"
-          ? "As linhas sem erro serão gravadas no Cadastro Único. As linhas com erro ficam de fora — corrija o arquivo e importe de novo."
+          ? "As linhas sem erro serão gravadas no cadastro. As linhas com erro ficam de fora — corrija o arquivo e importe de novo."
           : "Nada será gravado. Os arquivos enviados ficam guardados no histórico."}
         confirmLabel={confirm === "confirm" ? "Importar" : "Descartar"}
         destructive={confirm === "discard"}

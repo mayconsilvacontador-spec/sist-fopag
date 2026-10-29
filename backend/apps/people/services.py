@@ -1,4 +1,4 @@
-"""Regras do Cadastro Único (endereços e contas com vigência, documentos versionados)."""
+"""Regras do cadastro (endereços e contas com vigência, documentos versionados)."""
 import hashlib
 from datetime import timedelta
 
@@ -51,7 +51,7 @@ def validate_dependency(holder, dependent, kind, start_date):
         raise BusinessRuleError("O início da dependência não pode ser anterior ao nascimento do dependente.")
     if kind in (DependencyType.FILHO_INVALIDO, DependencyType.ENTEADO_INVALIDO, DependencyType.IRMAO_INVALIDO) \
             and not dependent.is_invalid:
-        raise BusinessRuleError("Para dependência por invalidez, marque o dependente como inválido no Cadastro Único.")
+        raise BusinessRuleError("Para dependência por invalidez, marque o dependente como inválido no cadastro.")
     if Dependency.objects.filter(holder=holder, dependent=dependent, end_date__isnull=True).exists():
         raise BusinessRuleError("Já existe dependência ativa entre essas pessoas. Encerre-a antes de criar outra.")
 

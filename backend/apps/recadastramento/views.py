@@ -130,5 +130,5 @@ class ItemViewSet(InstitutionScopedMixin, mixins.ListModelMixin, mixins.Retrieve
 
     @action(detail=True, methods=["get"])
     def cadastro(self, request, pk=None):
-        """Dados atuais do Cadastro Único (para o atendimento presencial)."""
+        """Dados atuais do cadastro (para o atendimento presencial)."""
         return Response(services.snapshot(self.get_object().person))

@@ -80,7 +80,7 @@ class ComplementMixin:
             raise RowError("CPF não informado")
         p = Person.objects.filter(institution=self.inst, cpf=cpf).first()
         if p is None:
-            raise RowError("pessoa não está no Cadastro Único — inclua o arquivo SPREV (servidores, aposentados, "
+            raise RowError("pessoa não está no cadastro — inclua o arquivo SPREV (servidores, aposentados, "
                            "pensionistas ou dependentes) no mesmo lote ou importe-o antes")
         return p
 

@@ -21,6 +21,13 @@ class ScopedSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError({name: "Registro de outra instituição."})
         return attrs
 
+    def to_internal_value(self, data):
+        # tira a máscara antes da conferência de tamanho do campo (14 dígitos)
+        if hasattr(data, "get") and isinstance(data.get("cnpj"), str):
+            data = data.copy()
+            data["cnpj"] = only_digits(data["cnpj"])
+        return super().to_internal_value(data)
+
     def validate_cnpj(self, value):
         digits = only_digits(value)
         if digits and not is_valid_cnpj(digits):

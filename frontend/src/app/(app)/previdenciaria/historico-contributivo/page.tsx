@@ -111,7 +111,7 @@ function BatchImport() {
         <p className="text-muted-foreground">
           Arquivo com os salários de muitos servidores de uma vez (ex.: enviado pelo RH da Prefeitura). CSV com
           <code> cpf;competencia;valor;regime;vinculo</code> (ex.: <code>123.456.789-09;07/1994;1.234,56;RPPS;Prefeitura</code>).
-          Regime e vínculo são opcionais. CPF não cadastrado no Cadastro Único é listado e não é importado; competência repetida é atualizada.
+          Regime e vínculo são opcionais. CPF ainda não cadastrado é listado e não é importado; competência repetida é atualizada.
         </p>
         <div className="grid gap-3 sm:grid-cols-3">
           <FormField label="Arquivo CSV" htmlFor="lt-file" className="sm:col-span-2"><Input id="lt-file" ref={fileRef} type="file" accept=".csv,.txt" className="py-1" /></FormField>

@@ -202,7 +202,7 @@ function ResultTable({ r }: { r: Result }) {
           </TableHeader>
           <TableBody>
             {r.linhas.map((row, i) => (
-              <TableRow key={i}>
+              <TableRow key={i} className={row._subtotal ? "bg-muted/40 font-semibold" : undefined}>
                 {r.colunas.map((c) => <TableCell key={c.key} className={cn(right(c.tipo) && "text-right tabular", "whitespace-nowrap")}>{fmt(row[c.key], c.tipo)}</TableCell>)}
               </TableRow>
             ))}

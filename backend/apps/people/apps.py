@@ -4,7 +4,7 @@ from django.apps import AppConfig
 class PeopleConfig(AppConfig):
     default_auto_field = "django.db.models.BigAutoField"
     name = "apps.people"
-    verbose_name = "Cadastro Único"
+    verbose_name = "Cadastro de pessoas"
 
     def ready(self):
         from apps.audit.registry import register

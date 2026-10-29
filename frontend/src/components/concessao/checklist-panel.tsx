@@ -83,7 +83,7 @@ function ItemRow({ c, item: i, editable, cadastro, onChanged, onWaive }: {
   const input = useRef<HTMLInputElement>(null);
   const [busy, setBusy] = useState(false);
   const [confirm, setConfirm] = useState<File | null>(null);
-  // Comprovante de residência e identidade: conferir/atualizar os dados do Cadastro Único antes de anexar
+  // Comprovante de residência e identidade: conferir/atualizar os dados do cadastro antes de anexar
   const pick = (file: File) => (i.person_doc_type === "RESIDENCIA" || i.person_doc_type === "IDENTIDADE" ? setConfirm(file) : upload(file));
   const upload = async (file: File, dados?: Record<string, string>) => {
     setBusy(true);
@@ -94,7 +94,7 @@ function ItemRow({ c, item: i, editable, cadastro, onChanged, onWaive }: {
       const res = await fetch(`/api/backend/concessoes/${c.id}/checklist/${i.id}/attach`, { method: "POST", body: fd, credentials: "same-origin" });
       const body = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(body.detail || "Falha ao anexar.");
-      toast.success(i.person_doc_type ? "Documento anexado e guardado no Cadastro Único." : "Documento anexado.");
+      toast.success(i.person_doc_type ? "Documento anexado e guardado no cadastro." : "Documento anexado.");
       setConfirm(null);
       onChanged();
     } catch (err) {
@@ -133,7 +133,7 @@ function ItemRow({ c, item: i, editable, cadastro, onChanged, onWaive }: {
             </div>
           )}
           {i.status === "NAO_SE_APLICA" && <div className="text-2xs text-muted-foreground">Não se aplica: {i.note} ({i.done_by_name})</div>}
-          {i.person_doc_type && <div className="text-2xs text-primary">Também guardado no Cadastro Único{i.person_document ? " ✓" : ""}</div>}
+          {i.person_doc_type && <div className="text-2xs text-primary">Também guardado no cadastro{i.person_document ? " ✓" : ""}</div>}
         </div>
       </div>
       <div className="flex shrink-0 items-center gap-1">
@@ -166,7 +166,7 @@ const ID_FIELDS: [string, string, string][] = [
   ["rg_number", "Número do RG", "sm:col-span-2"], ["rg_issuer", "Órgão emissor", "sm:col-span-1"], ["rg_uf", "UF", "sm:col-span-1"], ["rg_date", "Expedição", "sm:col-span-2"],
 ];
 
-/** Conferência dos dados do documento: o que for alterado atualiza o Cadastro Único (endereço = nova vigência). */
+/** Conferência dos dados do documento: o que for alterado atualiza o cadastro (endereço = nova vigência). */
 function ConfirmDataDialog({ item, file, cadastro, busy, onClose, onConfirm }: {
   item: ChecklistItemRow; file: File; cadastro?: ChecklistResponse["cadastro"]; busy: boolean;
   onClose: () => void; onConfirm: (dados?: Record<string, string>) => void;
@@ -181,7 +181,7 @@ function ConfirmDataDialog({ item, file, cadastro, busy, onClose, onConfirm }: {
         <DialogHeader>
           <DialogTitle>{addr ? "Conferir endereço do comprovante" : "Conferir dados da identidade"}</DialogTitle>
           <DialogDescription>
-            {cadastro?.nome} · arquivo {file.name}. Confira com o documento: se algo mudou, corrija aqui e o Cadastro Único é atualizado
+            {cadastro?.nome} · arquivo {file.name}. Confira com o documento: se algo mudou, corrija aqui e o cadastro é atualizado
             {addr ? " (o endereço anterior fica no histórico)" : ""}. O documento também é guardado nos documentos da pessoa.
           </DialogDescription>
         </DialogHeader>

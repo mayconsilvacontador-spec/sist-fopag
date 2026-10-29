@@ -353,6 +353,7 @@ export type RetirementRuleRow = {
   id: string; code: string; name: string; legal_basis: string; engine: string; group: string; for_teacher: boolean;
   params: Record<string, unknown>; valid_from: string | null; valid_to: string | null; proventos: string; paridade: string;
   gives_permanence_bonus: boolean; notes: string; active: boolean; updated_at: string;
+  norm: string | null; norm_citation: string; package: string;
 };
 
 export type CtcRow = {

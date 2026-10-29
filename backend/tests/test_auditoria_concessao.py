@@ -99,7 +99,7 @@ def test_1_adriana_regra_menos_vantajosa_e_recusada(ctx, client_for, setores):
     assert Decimal(best["valor"]) == Decimal("6000.00") and best["forma"].startswith("Integralidade")
     r = ben.post(f"/api/v1/concessoes/{cid}/frame/", {"rule": "CF40_IIIB", "validity_date": "2026-09-01",
                                                       "validity_class": 3}, format="json")
-    assert r.status_code == 409 and "mais favorável" in r.json()["detail"] and "art. 5º, § 2º" in r.json()["detail"]
+    assert r.status_code == 409 and "mais favorável" in r.json()["detail"] and "direito adquirido" in r.json()["detail"]
 
 
 # 2 ---------------------------------------------------------------- opção do servidor justificada
@@ -181,7 +181,7 @@ def test_8_proporcional_aplica_fracao_depois_do_limite(ctx):
     frac = Decimal(est["fracao"])
     assert frac < 1
     assert Decimal(est["valor"]) == q(Decimal("3000.00") * frac)  # média (5.343,75) limitada a 3.000,00, depois × fração
-    assert "limitada à remuneração" in est["forma"] and "art. 63" in est["forma"]
+    assert "limitada à remuneração" in est["forma"] and "art. 40" in est["forma"]
 
 
 # 9 ---------------------------------------------------------------- simulação = concessão
@@ -253,7 +253,7 @@ def test_14_envio_ao_juridico_exige_ciencia_dos_avisos(ctx, client_for, setores)
                                                          "validity_class": 3}, format="json").status_code == 200
     calc = ben.post(f"/api/v1/concessoes/{cid}/calculate/").json()
     assert calc["total"] == "6000.00" and calc["calculation"]["data_base"] == "2026-09-01"
-    assert any("art. 4º, parágrafo único" in a for a in calc["calculation"]["avisos"])
+    assert any("composição da remuneração" in a for a in calc["calculation"]["avisos"])
     r = ben.post(f"/api/v1/concessoes/{cid}/send/")
     assert r.status_code == 409 and "ciência" in r.json()["detail"]
     anexar_checklist(ben, cid)

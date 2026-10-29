@@ -1,4 +1,4 @@
-"""Fila de leitura, conferências automáticas entre documentos e aplicação dos dados conferidos ao Cadastro Único."""
+"""Fila de leitura, conferências automáticas entre documentos e aplicação dos dados conferidos ao cadastro."""
 import hashlib
 import re
 import unicodedata
@@ -276,8 +276,14 @@ def _int(v) -> int:
 
 
 def _money(v) -> Decimal | None:
+    """Aceita 1234.56, 1234,56 e 1.234,56 (formato brasileiro dos contracheques)."""
+    if v in (None, ""):
+        return None
+    txt = str(v).replace("R$", "").replace(" ", "").strip()
+    if "," in txt:
+        txt = txt.replace(".", "").replace(",", ".")
     try:
-        return Decimal(str(v).replace(",", ".")) if v not in (None, "") else None
+        return Decimal(txt)
     except InvalidOperation:
         return None
 
@@ -391,18 +397,24 @@ def run_checks(job: ReadingJob) -> list[dict]:
     if not is_pension and not tipos & {"CTC", "HISTORICO_FUNCIONAL"}:
         add("aviso", "Sem CTC nem histórico funcional: o tempo de serviço não pôde ser lido")
 
-    # 5. Comparação com o Cadastro Único
+    # 5. Comparação com o cadastro
     from apps.people.models import Person
 
     cpf = next((only_digits(c["valor"]) for _, _, c in _fields(job, "pessoa.cpf")), "")
     p = Person.objects.filter(institution=job.institution, cpf=cpf).first() if cpf else None
+    if job.person_id and p and p.pk != job.person_id:
+        add("erro", "O CPF dos documentos é de outra pessoa", f"escolhida: {job.person.name} × documentos: {p.name}")
+    elif job.person_id and not cpf:
+        add("ok", f"Pessoa escolhida pela equipe: {job.person.name} (os documentos não trazem CPF).")
+    elif not cpf:
+        add("aviso", "Nenhum CPF nos documentos: escolha a pessoa (ou junte esta leitura à do processo) antes de aplicar.")
     if p:
         nasc = next((c["valor"] for _, _, c in _fields(job, "pessoa.data_nascimento")), "")
         if nasc and p.birth_date and str(p.birth_date) != nasc[:10]:
-            add("erro", "Data de nascimento diferente do Cadastro Único", f"cadastro {p.birth_date:%d/%m/%Y} × documento {nasc}")
-        add("ok", f"Pessoa já está no Cadastro Único: {p.name}. Só os campos vazios serão completados.")
+            add("erro", "Data de nascimento diferente do cadastro", f"cadastro {p.birth_date:%d/%m/%Y} × documento {nasc}")
+        add("ok", f"Pessoa já cadastrada: {p.name}. Só os campos vazios serão completados.")
     elif cpf:
-        add("aviso", "Pessoa não está no Cadastro Único: será incluída ao aplicar.")
+        add("aviso", "Pessoa ainda não cadastrada: será incluída em Servidores ao aplicar.")
 
     pend = sum(1 for _, d in documents(job) for c in d["campos"] if not c["confirmado"] and not c["ignorado"])
     if pend:
@@ -414,7 +426,9 @@ def run_checks(job: ReadingJob) -> list[dict]:
 # ================================================================== aplicação ao cadastro
 DOC_MAP = {"RG_CPF": "IDENTIDADE", "CTC": "CTC", "ATO": "ATO", "PUBLICACAO": "ATO", "CERTIDAO_OBITO": "CERT_OBITO",
            "CERTIDAO_CASAMENTO": "CERT_CASAMENTO", "CERTIDAO_NASCIMENTO": "CERT_NASC",
-           "COMPROVANTE_RESIDENCIA": "RESIDENCIA", "LAUDO_MEDICO": "LAUDO"}
+           "COMPROVANTE_RESIDENCIA": "RESIDENCIA", "LAUDO_MEDICO": "LAUDO", "HISTORICO_FUNCIONAL": "FICHA_FUNC",
+           "CONTRACHEQUE": "CONTRACHEQUE", "FICHA_FINANCEIRA": "CONTRACHEQUE", "DECLARACAO_ACUMULACAO": "DECL_ACUMUL",
+           "MEMORIA_CALCULO": "ATO"}
 MARITAL = {"SOLTEIRO": 1, "SOLTEIRA": 1, "CASADO": 2, "CASADA": 2, "VIUVO": 3, "VIUVA": 3, "SEPARADO": 4,
            "SEPARADA": 4, "DIVORCIADO": 5, "DIVORCIADA": 5, "UNIAO ESTAVEL": 6}
 
@@ -442,7 +456,12 @@ def apply(job: ReadingJob, user, *, organ=None, segment: str = "", sex: str = ""
         raise BusinessRuleError("Há divergências marcadas como erro. Corrija os dados (ou ignore o dado errado) antes.")
     cpf = only_digits(_value(job, "pessoa.cpf"))
     if not is_valid_cpf(cpf):
-        raise BusinessRuleError("CPF não encontrado ou inválido nos documentos conferidos.")
+        if job.person_id is None:
+            raise BusinessRuleError("Os documentos não trazem um CPF válido: escolha a pessoa nesta leitura "
+                                    "(ou junte-a à leitura do processo que tem o documento de identidade).")
+        cpf = job.person.cpf
+    elif job.person_id and job.person.cpf != cpf:
+        raise BusinessRuleError("O CPF dos documentos é de outra pessoa que a escolhida nesta leitura.")
     summary = {"pessoa": [], "vinculo": [], "averbacoes": [], "frequencia": [], "documentos": [], "divergencias": []}
 
     # ---- pessoa (completa só o que está vazio; divergências ficam listadas, nunca sobrescritas)
@@ -465,7 +484,7 @@ def apply(job: ReadingJob, user, *, organ=None, segment: str = "", sex: str = ""
         person = Person.objects.create(institution=job.institution, cpf=cpf,
                                        **{k: v for k, v in data.items() if v not in (None, "")})
         log_event("CREATE", module="cadastro.pessoas", obj=person, object_repr=f"{person.name} (leitura inteligente)")
-        summary["pessoa"].append("Pessoa incluída no Cadastro Único")
+        summary["pessoa"].append("Pessoa incluída no cadastro (Servidores)")
     else:
         changed = []
         for k, v in data.items():
@@ -548,10 +567,10 @@ def apply(job: ReadingJob, user, *, organ=None, segment: str = "", sex: str = ""
                 n += ded
             summary["frequencia"].append(f"Deduções da CTC lançadas no vínculo: {n} dia(s)")
 
-    # ---- arquivos no Cadastro Único (documentos versionados)
+    # ---- arquivos no cadastro (documentos versionados)
     for rf in job.files.filter(status=FileStatus.LIDO):
-        tipos = {d["tipo"] for d in rf.result.get("documentos", [])}
-        doc_type = DOC_MAP.get(next(iter(tipos))) if len(tipos) == 1 else None
+        # o documento principal do arquivo (o primeiro reconhecido) define a pasta; o resto vai em "Outros"
+        doc_type = next((DOC_MAP[d["tipo"]] for d in rf.result.get("documentos", []) if d["tipo"] in DOC_MAP), None)
         with rf.file.open("rb") as fh:
             up = ContentFile(fh.read(), name=rf.file_name if rf.file_name.lower().endswith(".pdf") else f"{rf.file_name}.pdf")
         up.content_type = "application/pdf"

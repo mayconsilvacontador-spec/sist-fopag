@@ -127,7 +127,7 @@ def open_concession(institution, *, process, kind, person, link=None, request_da
             raise BusinessRuleError("O servidor já tem aposentadoria ativa por este vínculo.")
     else:
         if not person.death_date:
-            raise BusinessRuleError("Informe a data do óbito do instituidor no Cadastro Único antes de abrir a pensão.")
+            raise BusinessRuleError("Informe a data do óbito do instituidor no cadastro antes de abrir a pensão.")
     c = Concession.objects.create(institution=institution, process=process, kind=kind, person=person, link=link,
                                   request_date=request_date or process.opened_date,
                                   death_date=person.death_date if kind == BenefitKind.PENSAO else None)
@@ -247,7 +247,7 @@ def frame_retirement(c: Concession, *, rule=None, modality=None, validity_date: 
                 raise BusinessRuleError(
                     f"Existe regra mais favorável: {best['nome']} ({best['fundamento']}), estimada em "
                     f"{_brl(best['valor'])}" + (f", contra {_brl(chosen['valor'])}" if chosen and chosen["valor"] else "")
-                    + ". O servidor tem direito ao benefício mais favorável (Emenda à LOM 28/2025, art. 5º, § 2º). "
+                    + ". O servidor tem direito ao benefício mais favorável (direito adquirido — conferir a legislação do RPPS). "
                     "Para enquadrar em regra menos vantajosa, registre a justificativa (mínimo de 30 caracteres) e "
                     "confirme que o termo de opção assinado pelo servidor está juntado ao processo.")
             option_text = (f"Opção por regra menos vantajosa. Mais favorável: {best['nome']} (R$ {best['valor']}). "
@@ -265,12 +265,17 @@ def frame_retirement(c: Concession, *, rule=None, modality=None, validity_date: 
             Modality.PROFESSOR if rule.for_teacher else Modality.TEMPO_CONTRIBUICAO)
         c.legal_basis = rule.legal_basis
     else:
-        c.legal_basis = c.legal_basis or "Art. 40, § 1º, I, CF c/c art. 10, § 1º, II, EC 103/2019 (Emenda à LOM 28/2025)"
+        c.legal_basis = c.legal_basis or "Art. 40, § 1º, I, CF (aposentadoria por incapacidade permanente)"
     c.rule, c.modality = rule, modality
     c.validity_date, c.validity_class, c.validity_legal_basis = validity_date, validity_class, validity_legal_basis
     c.invalidity_cause, c.cid, c.medical_report_date = invalidity_cause, cid, medical_report_date
     c.judicial, c.judicial_process = judicial, judicial_process
-    c.local_legal_basis = local_legal_basis or "Emenda nº 28/2025 à Lei Orgânica do Município"
+    if not local_legal_basis:  # norma da regra; senão, a legislação local vigente cadastrada para aposentadoria
+        from apps.previdencia.legislacao import main_norm
+
+        norm = (rule.norm if rule is not None and rule.norm_id else None) or main_norm(c.institution)
+        local_legal_basis = norm.citation if norm else ""
+    c.local_legal_basis = local_legal_basis
     c.analysis, c.stage = analysis, Stage.ENQUADRADO
     c.save()
     _log(c, "enquadramento", regra=rule.code if rule else "INCAPACIDADE", data_validade=validity_date.isoformat(),
@@ -346,8 +351,8 @@ def _calc_retirement(c: Concession):
         paridade = integral
         if integral:
             warnings.append("Integralidade calculada pela última remuneração de contribuição. Confira a composição da "
-                            "remuneração do cargo efetivo (Emenda à LOM 28/2025, art. 4º, parágrafo único: vantagens "
-                            "do cargo, adicionais de caráter individual e médias das parcelas variáveis).")
+                            "remuneração do cargo efetivo conforme a legislação do RPPS (em regra: vantagens do cargo, "
+                            "adicionais de caráter individual e médias das parcelas variáveis).")
     if value is None:
         raise BusinessRuleError("Não foi possível calcular: cadastre os salários de contribuição (Histórico "
                                 "contributivo) ou a remuneração do vínculo.")
@@ -402,7 +407,7 @@ def _calc_pension(c: Concession):
                 .filter(Q(end_date__isnull=True) | Q(end_date__gte=death)).select_related("dependent"))
     if not deps:
         raise BusinessRuleError("O instituidor não tem dependentes habilitados à pensão na data do óbito "
-                                "(Cadastro Único › Dependentes).")
+                                "(Pasta do Servidor › Dependentes).")
     warnings = []
     # Base: aposentadoria recebida ou a que teria direito por incapacidade na data do óbito
     retired = Benefit.objects.filter(beneficiary=c.person, kind=BenefitKind.APOSENTADORIA,
@@ -454,7 +459,7 @@ def _calc_pension(c: Concession):
                                     duration=duration, end_date=end, duration_basis=basis)
     c.total, c.integralidade, c.paridade = total, False, False
     c.validity_date = c.validity_date or death
-    c.legal_basis = c.legal_basis or ("Art. 23 da EC 103/2019 (Emenda à LOM 28/2025, art. 3º)" if not reversible
+    c.legal_basis = c.legal_basis or ("Art. 23 da EC 103/2019" if not reversible
                                       else "Art. 40, § 7º, da Constituição Federal (redação da EC 41/2003)")
     c.calculation = {"base": str(base), "base_forma": base_how, "forma": how, "teto_rgps": str(ceiling),
                      "dependentes": n, "cotas_reversiveis": reversible, "avisos": warnings,

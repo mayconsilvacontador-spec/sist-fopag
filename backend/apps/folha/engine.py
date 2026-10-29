@@ -208,12 +208,17 @@ def _monthly_base(ctx: Context, b) -> Slip:
     s.add(rub, s.benefit_value, reference=f"{days} dias" if days < 30 else "")
     s.memory["dias"] = days
 
-    # Retroativo (somente benefícios concedidos no SIST, na primeira folha)
-    if b.concession_id is not None and b.start_date < ctx.m0 and not _has_prior_payroll(b, ctx.run):
+    # Retroativo (somente benefícios concedidos no SIST, na primeira folha). Benefício que o sistema anterior já
+    # pagou (processo digitalizado) só tem retroativo depois de `paid_until`.
+    retro_from = b.start_date
+    if b.paid_until:
+        nxt = b.paid_until.replace(day=1)
+        retro_from = max(retro_from, date(nxt.year + nxt.month // 12, nxt.month % 12 + 1, 1))
+    if b.concession_id is not None and retro_from < ctx.m0 and not _has_prior_payroll(b, ctx.run):
         retro_rub = ctx.rubrics.calc("RETROATIVO")
         cur, prev = ZERO, ZERO
         months = []
-        for m in months_between(b.start_date, ctx.m0):
+        for m in months_between(retro_from, ctx.m0):
             mm0, mm1 = month_bounds(m.year, m.month)
             d = paid_days(b.start_date, b.end_date, mm0, mm1)
             v = prorate(b.amount, d)

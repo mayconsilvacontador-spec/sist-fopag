@@ -67,7 +67,7 @@ class PersonSerializer(PersonListSerializer):
         if self.instance:
             qs = qs.exclude(pk=self.instance.pk)
         if qs.exists():
-            raise serializers.ValidationError("Já existe pessoa com este CPF no Cadastro Único.")
+            raise serializers.ValidationError("Já existe pessoa com este CPF no cadastro.")
         return digits
 
     def validate_pis_pasep(self, value):

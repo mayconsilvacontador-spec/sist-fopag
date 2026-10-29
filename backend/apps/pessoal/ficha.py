@@ -1,7 +1,8 @@
 """
 FICHA FINANCEIRA e CONTROLE DA CONTRIBUIÇÃO DO SERVIDOR.
 
-- Importação (`import_lines`): ficha financeira do sistema anterior (CSV/XLSX, leiaute `COLUMNS`), uma linha por
+- Importação (`import_lines`): ficha financeira do sistema anterior (CSV/XLSX, leiaute `COLUMNS`, ou o PDF da ficha
+  financeira anual lido por `ficha_pdf.parse`), uma linha por
   rubrica × competência × matrícula. Valida tudo antes de gravar (`apply=False` desfaz). Repetir o arquivo atualiza
   o valor da mesma rubrica/competência (não duplica). A CLASSIFICAÇÃO diz qual rubrica é a contribuição ao RPPS e qual
   é a base; se vier em branco, o sistema SUGERE pelo nome (a conferir em `reclassify`).
@@ -91,7 +92,13 @@ def import_lines(institution, content: bytes, file_name: str, *, person=None, ap
     from apps.people.importers.sprev import _dec, _s, read_table
     from apps.people.models import Person
 
-    rows = read_table(content, file_name)
+    pdf_warnings, pdf_info = [], None
+    if file_name.lower().endswith(".pdf"):
+        from .ficha_pdf import parse
+
+        rows, pdf_warnings, pdf_info = parse(content)
+    else:
+        rows = read_table(content, file_name)
     if not rows:
         raise BusinessRuleError("Arquivo vazio.")
     missing = {"CPF", "COMPETENCIA", "CODIGO", "RUBRICA", "NATUREZA", "VALOR"} - set(rows[0].keys())
@@ -147,12 +154,13 @@ def import_lines(institution, content: bytes, file_name: str, *, person=None, ap
             servers.add(p.pk)
         except (ValueError, BusinessRuleError) as exc:
             if len(errors) < 300:
-                errors.append({"linha": i, "mensagem": str(exc)})
+                errors.append({"linha": i, "mensagem": str(exc), "onde": row.get("_ORIGEM", "")})
     summary = {"linhas": len(rows), "incluidas": created, "atualizadas": updated, "erros": errors,
                "total_erros": len(rows) - created - updated, "servidores": len(servers),
                "periodo": [min(comps).strftime("%m/%Y"), max(comps).strftime("%m/%Y")] if comps else None,
                "rubricas": sorted(rubrics.values(), key=lambda r: r["codigo"]),
-               "sem_classificacao_rpps": not any(r["classificacao"] == "CONTRIB_RPPS" for r in rubrics.values())}
+               "sem_classificacao_rpps": not any(r["classificacao"] == "CONTRIB_RPPS" for r in rubrics.values()),
+               "avisos": pdf_warnings, "pdf": pdf_info and {"paginas": pdf_info["paginas"], "anos": pdf_info["anos"]}}
     if not apply:
         transaction.set_rollback(True)
         return {**summary, "gravado": False}
@@ -202,7 +210,8 @@ def _folha_rows(person, year=None):
                 "situacao": s.run.get_status_display()}
         for it in s.items.all():
             cat = ("CONTRIB_RPPS" if it.rubric and it.rubric.calc == RubricCalc.CONTRIB_RPPS
-                   else "IRRF" if it.rubric and it.rubric.calc == RubricCalc.IRRF else "")
+                   else "IRRF" if it.rubric and it.rubric.calc == RubricCalc.IRRF
+                   else "INCIDE_RPPS" if it.rubric and it.rubric.inc_rpps and it.kind == "PROVENTO" else "")
             out.append({**base, "code": it.code, "name": it.name, "nature": it.kind, "category": cat, "amount": it.amount})
         out.append({**base, "code": "B-RPPS", "name": "BASE DE CONTRIBUIÇÃO RPPS", "nature": "BASE",
                     "category": "BASE_RPPS", "amount": s.rpps_base})
@@ -341,9 +350,11 @@ def contributions(person, year: int | None = None) -> dict:
         if r["kind"] not in ("MENSAL", "DECIMO", "COMPLEMENTAR", "RESCISAO", "FERIAS"):
             continue
         k = (r["comp"], r["kind"], r["reg"])
-        a = acc.setdefault(k, {"base": ZERO, "desc": ZERO, "patronal": None, "fonte": r["fonte"], "link": r["link"],
-                               "situacao": r["situacao"]})
-        if r["category"] == "BASE_RPPS":
+        a = acc.setdefault(k, {"base": ZERO, "desc": ZERO, "incide": None, "patronal": None, "fonte": r["fonte"],
+                               "link": r["link"], "situacao": r["situacao"]})
+        if r["category"] == "INCIDE_RPPS":
+            a["incide"] = (a["incide"] or ZERO) + r["amount"]
+        elif r["category"] == "BASE_RPPS":
             a["base"] += r["amount"]
         elif r["category"] == "CONTRIB_RPPS":
             a["desc"] += r["amount"]
@@ -351,7 +362,7 @@ def contributions(person, year: int | None = None) -> dict:
             a["patronal"] = (a["patronal"] or ZERO) + r["amount"]
     covered = {k[0] for k in acc}
     for r in _history_rows(person, year, covered):
-        acc[(r["comp"], "MENSAL", "")] = {"base": r["amount"], "desc": ZERO, "patronal": None, "fonte": "HISTORICO",
+        acc[(r["comp"], "MENSAL", "")] = {"base": r["amount"], "desc": ZERO, "incide": None, "patronal": None, "fonte": "HISTORICO",
                                          "link": None, "situacao": r["situacao"], "orgao": r["orgao"]}
     rate_cache, items = {}, []
     tot = defaultdict(lambda: ZERO)
@@ -365,10 +376,17 @@ def contributions(person, year: int | None = None) -> dict:
                                 Decimal(str(pat)) if pat not in (None, "") else None)
         rate, prate = rate_cache[comp]
         avisos = []
-        base, base_estimada = a["base"], False
-        if not base and a["desc"] and rate:
-            base, base_estimada = (a["desc"] / rate).quantize(Decimal("0.01")), True
-            avisos.append("base estimada pelo desconto")
+        # três bases: a informada (linha de base), a das rubricas que incidem e a do cálculo inverso (desconto ÷ alíquota)
+        base_desc = (a["desc"] / rate).quantize(Decimal("0.01")) if a["desc"] and rate else None
+        base, base_estimada, origem = a["base"], False, "INFORMADA"
+        if not base and a["incide"] is not None:
+            base, origem = a["incide"], "RUBRICAS"
+        if not base and base_desc is not None:
+            base, base_estimada, origem = base_desc, True, "DESCONTO"
+            avisos.append("base estimada pelo desconto (classifique as rubricas que entram na base para conferir)")
+        if origem != "DESCONTO" and base_desc is not None and abs(base - base_desc) > Decimal("1.00"):
+            avisos.append(f"base {'das rubricas' if origem == 'RUBRICAS' else 'informada'} R$ {_br(base)} × "
+                          f"base pelo desconto R$ {_br(base_desc)}")
         devido = (base * rate).quantize(Decimal("0.01")) if rate is not None else None
         dif = (a["desc"] - devido) if devido is not None else None
         if rate is None:
@@ -393,7 +411,8 @@ def contributions(person, year: int | None = None) -> dict:
         items.append({
             "competencia": comp.strftime("%m/%Y"), "folha": kind, "matricula": reg,
             "orgao": link.organ.name if link is not None else a.get("orgao", ""), "fonte": a["fonte"],
-            "base": str(base), "base_estimada": base_estimada, "descontado": str(a["desc"]),
+            "base": str(base), "base_estimada": base_estimada, "base_origem": origem,
+            "base_pelo_desconto": str(base_desc) if base_desc is not None else None, "descontado": str(a["desc"]),
             "aliquota_aplicada": str((a["desc"] / base * 100).quantize(Decimal("0.01"))) if base else None,
             "aliquota_legal": str((rate * 100).quantize(Decimal("0.01"))) if rate is not None else None,
             "devido": str(devido) if devido is not None else None, "diferenca": str(dif) if dif is not None else None,
@@ -402,10 +421,59 @@ def contributions(person, year: int | None = None) -> dict:
         tot["base"] += base
         tot["descontado"] += a["desc"]
         tot["devido"] += devido or ZERO
+        tot["diferenca"] += dif or ZERO  # só competências com alíquota cadastrada
         tot["patronal"] += patronal or ZERO
-    tot["diferenca"] = tot["descontado"] - tot["devido"]
     return {"competencias": items, "totais": {k: str(v) for k, v in tot.items()},
             "com_aviso": sum(1 for i in items if i["avisos"]), "anos": years(person)}
+
+
+def _br(v) -> str:
+    return f"{v:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
+
+
+def infer_incidence(person) -> dict:
+    """
+    Descobre, pelo CÁLCULO INVERSO, quais proventos formam a base do RPPS: em cada competência mensal importada,
+    base = desconto ÷ alíquota da época; procura a combinação de proventos cuja soma dá essa base (±R$ 0,10).
+    Uma rubrica é sugerida quando entra na combinação em pelo menos 80% das competências resolvidas em que aparece.
+    Só sugere; quem decide é o usuário (`reclassify`).
+    """
+    from itertools import combinations
+
+    from apps.institutions.services import get_parameter
+
+    by = defaultdict(lambda: {"prov": {}, "desc": ZERO})
+    names = {}
+    for ln in FinancialLine.objects.filter(person=person, payroll_kind="MENSAL"):
+        k = (ln.registration, ln.competence)
+        if ln.nature == "PROVENTO":
+            by[k]["prov"][ln.code] = by[k]["prov"].get(ln.code, ZERO) + ln.amount
+            names[ln.code] = ln.name
+        elif ln.category == "CONTRIB_RPPS":
+            by[k]["desc"] += ln.amount
+    present, inside = defaultdict(int), defaultdict(int)
+    resolved = unresolved = 0
+    for (reg, comp), d in by.items():
+        rate = get_parameter(person.institution, "folha.aliquota_segurado", comp)
+        if not d["desc"] or rate in (None, "") or not d["prov"] or len(d["prov"]) > 14:
+            continue
+        target = d["desc"] / Decimal(str(rate))
+        codes = sorted(d["prov"])
+        hits = [set(c) for n in range(1, len(codes) + 1) for c in combinations(codes, n)
+                if abs(sum(d["prov"][x] for x in c) - target) <= Decimal("0.10")]
+        if len(hits) != 1:  # nenhuma ou mais de uma combinação possível: não dá para afirmar
+            unresolved += 1
+            continue
+        resolved += 1
+        for code in codes:
+            present[code] += 1
+            inside[code] += code in hits[0]
+    out = []
+    for code in sorted(present, key=lambda c: (-inside[c] / present[c], c)):
+        share = inside[code] / present[code]
+        out.append({"codigo": code, "rubrica": names[code], "competencias": present[code], "na_base": inside[code],
+                    "percentual": round(share * 100), "sugere": share >= 0.8})
+    return {"resolvidas": resolved, "sem_solucao": unresolved, "rubricas": out}
 
 
 @transaction.atomic

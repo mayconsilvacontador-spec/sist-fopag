@@ -60,10 +60,10 @@ def simulate(person, on: date | None = None) -> dict:
     s = pt.summary(today)
     warnings = list(pt.warnings) + avg.warnings + avg.pendencias
     if pt.link and pt.link.position.cargo_type == 6:
-        warnings.append("Guarda Municipal: a idade mínima será definida em lei complementar (Emenda à LOM 28/2025, "
-                        "art. 1º, parágrafo único) — as regras gerais foram aplicadas provisoriamente.")
+        warnings.append("Guarda Municipal: confira na legislação do RPPS se há idade mínima própria (atividade de risco) — "
+                        "as regras gerais foram aplicadas.")
     if pt.link is None:
-        warnings.append("Sem vínculo estatutário no Cadastro Único — cadastre o vínculo para simular.")
+        warnings.append("Sem vínculo estatutário no cadastro — cadastre o vínculo para simular.")
     return {
         "data_referencia": today,
         "idade": age_years(person.birth_date, today),
@@ -315,7 +315,7 @@ def import_salaries_batch(institution, content: bytes) -> dict:
     """
     Lote de vários segurados (ex.: arquivo do RH da Prefeitura).
     CSV: cpf;competencia;valor[;regime][;vinculo]  (cabeçalho opcional). CPF com ou sem máscara.
-    Linhas de CPF não cadastrado no Cadastro Único são recusadas e listadas; as demais são importadas.
+    Linhas de CPF ainda não cadastrado são recusadas e listadas; as demais são importadas.
     Competência repetida (mesmo segurado, regime e vínculo) é atualizada. Gravação em blocos (arquivos grandes).
     """
     from apps.core.validators import only_digits
@@ -353,7 +353,7 @@ def import_salaries_batch(institution, content: bytes) -> dict:
         person = people.get(cpf)
         if person is None:
             if cpf not in unknown and len(errors) < 200:
-                errors.append({"linha": line, "mensagem": f"CPF {cpf} não cadastrado no Cadastro Único"})
+                errors.append({"linha": line, "mensagem": f"CPF {cpf} não cadastrado"})
             unknown.add(cpf)
             continue
         touched.add(cpf)

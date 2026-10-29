@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { fetcher, qs, type Paginated } from "@/lib/api";
 import type { PersonRow } from "@/lib/types";
 
-/** Busca uma pessoa do Cadastro Único por nome, CPF ou matrícula. */
+/** Busca uma pessoa do cadastro por nome, CPF ou matrícula. */
 export function PersonPicker({
   value, onChange, tipo,
 }: {

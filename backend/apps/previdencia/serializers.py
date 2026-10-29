@@ -4,7 +4,7 @@ from rest_framework import serializers
 
 from apps.core.validators import only_digits
 
-from .models import Averbacao, ContributionSalary, Ctc, RetirementRule
+from .models import Averbacao, ContributionSalary, Ctc, LegalNorm, RetirementRule
 
 EC103_DATE = date(2019, 11, 12)  # vedada a conversão de tempo especial em comum após a EC 103
 
@@ -73,11 +73,39 @@ class ContributionSalarySerializer(serializers.ModelSerializer):
 
 
 class RetirementRuleSerializer(serializers.ModelSerializer):
+    norm_citation = serializers.CharField(source="norm.citation", read_only=True, default="")
+
     class Meta:
         model = RetirementRule
         fields = ["id", "code", "name", "legal_basis", "engine", "group", "for_teacher", "params", "valid_from",
-                  "valid_to", "proventos", "paridade", "gives_permanence_bonus", "notes", "active", "updated_at"]
-        read_only_fields = ["code", "engine", "updated_at"]
+                  "valid_to", "proventos", "paridade", "gives_permanence_bonus", "notes", "active", "updated_at",
+                  "norm", "norm_citation", "package"]
+        read_only_fields = ["code", "engine", "updated_at", "package"]
+
+    def validate_norm(self, norm):
+        inst = self.context["request"].institution
+        if norm is not None and norm.institution_id != inst.pk:
+            raise serializers.ValidationError("Norma de outra instituição.")
+        return norm
+
+
+class LegalNormSerializer(serializers.ModelSerializer):
+    kind_display = serializers.CharField(source="get_kind_display", read_only=True)
+    citation = serializers.CharField(read_only=True)
+    has_file = serializers.SerializerMethodField()
+    rules_count = serializers.SerializerMethodField()
+
+    def get_has_file(self, o):
+        return bool(o.file)
+
+    def get_rules_count(self, o):
+        return o.rules.filter(active=True).count()
+
+    class Meta:
+        model = LegalNorm
+        fields = ["id", "kind", "kind_display", "number", "date", "publication_date", "valid_from", "valid_to", "summary",
+                  "subjects", "url", "file_name", "sha256", "has_file", "active", "citation", "rules_count", "updated_at"]
+        read_only_fields = fields
 
 
 class CtcSerializer(serializers.ModelSerializer):

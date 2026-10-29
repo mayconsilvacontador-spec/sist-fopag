@@ -80,7 +80,7 @@ COMMON = [
      ("APOSENTADORIA", "PENSAO", "REVISAO")),
 ]
 
-# Documentos do checklist que também são guardados no Cadastro Único da pessoa do processo (nova versão)
+# Documentos do checklist que também são guardados no cadastro da pessoa do processo (nova versão)
 PERSON_DOC_BY_NAME = {
     "Documento de identidade e CPF do servidor": "IDENTIDADE",
     "Comprovante de residência": "RESIDENCIA",
@@ -161,7 +161,7 @@ def _require_editable(c, item: ChecklistItem):
 def attach(c, item: ChecklistItem, upload, user, data: dict | None = None) -> ChecklistItem:
     """
     Anexa o arquivo ao processo do Protocolo (com SHA-256) e cumpre o item. O anexo anterior permanece no processo.
-    Se o item é um documento pessoal, guarda também no Cadastro Único (nova versão) e, se vierem dados conferidos
+    Se o item é um documento pessoal, guarda também no cadastro (nova versão) e, se vierem dados conferidos
     (endereço do comprovante, RG da identidade), atualiza o cadastro sem apagar o histórico.
     """
     from django.core.files.base import ContentFile
@@ -193,7 +193,7 @@ def attach(c, item: ChecklistItem, upload, user, data: dict | None = None) -> Ch
 
 
 def _to_cadastro(c, item, content, upload):
-    """Cópia do arquivo nos documentos da pessoa (Cadastro Único). Se já for a versão atual, reaproveita."""
+    """Cópia do arquivo nos documentos da pessoa (cadastro). Se já for a versão atual, reaproveita."""
     from django.core.files.uploadedfile import SimpleUploadedFile
 
     from apps.people.models import Document
@@ -208,7 +208,7 @@ def _to_cadastro(c, item, content, upload):
 
 
 def update_cadastro(person, doc_type: str, data: dict, user, c=None):
-    """Atualiza o Cadastro Único com os dados conferidos no documento (endereço = nova vigência; RG = auditado)."""
+    """Atualiza o cadastro com os dados conferidos no documento (endereço = nova vigência; RG = auditado)."""
     from apps.audit.services import log_event
     from apps.core.validators import only_digits
     from apps.people.models import Address
@@ -227,7 +227,7 @@ def update_cadastro(person, doc_type: str, data: dict, user, c=None):
         if same:
             return
         if cur and cur.valid_from >= today:
-            raise BusinessRuleError("O endereço já foi alterado hoje; corrija pelo Cadastro Único.")
+            raise BusinessRuleError("O endereço já foi alterado hoje; corrija pelo cadastro.")
         add_address(person, valid_from=today, **fields)
         log_event("UPDATE", module="cadastros.segurados", obj=person,
                   object_repr=f"Endereço atualizado pelo comprovante de residência{origin}")

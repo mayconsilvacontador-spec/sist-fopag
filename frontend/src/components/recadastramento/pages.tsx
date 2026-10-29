@@ -96,7 +96,7 @@ function Campaigns() {
   const year = new Date().getFullYear();
   return (
     <>
-      <PageHeader title="Campanhas de Recadastramento" description="Cada campanha segue o ato do órgão. O segurado atualiza os dados pelo Portal ou no atendimento; a equipe confere antes de gravar no Cadastro Único."
+      <PageHeader title="Campanhas de Recadastramento" description="Cada campanha segue o ato do órgão. O segurado atualiza os dados pelo Portal ou no atendimento; a equipe confere antes de gravar no cadastro."
         breadcrumb={[{ label: "Recadastramento" }, { label: "Campanhas" }]}
         actions={can("recadastramento.campanhas", "incluir") && <Button onClick={() => setEditing("new")}><Plus /> Nova campanha</Button>} />
       {error && <ErrorState error={error} />}
@@ -261,7 +261,7 @@ function ReviewDialog({ item, canReview, onClose, onDone }: { item: Item; canRev
         </DialogHeader>
         <DialogBody className="space-y-4 text-xs">
           <div>
-            <div className="mb-1 font-semibold">O que muda no Cadastro Único</div>
+            <div className="mb-1 font-semibold">O que muda no cadastro</div>
             {item.mudancas.length ? (
               <Table>
                 <TableHeader><TableRow><TableHead>Campo</TableHead><TableHead>Hoje no cadastro</TableHead><TableHead>Informado</TableHead></TableRow></TableHeader>
@@ -276,7 +276,7 @@ function ReviewDialog({ item, canReview, onClose, onDone }: { item: Item; canRev
             <div className="rounded-lg border border-warning-border bg-warning-soft p-3">
               <div className="mb-1 font-semibold text-warning">Declarações que pedem providência</div>
               {decl.map(([k, v]) => <div key={k}><b>{DECL_LABEL[k]}:</b> {v === true ? "sim" : String(v)}</div>)}
-              <div className="mt-1 text-muted-foreground">Dependentes e conta bancária não são alterados por aqui: trate no Cadastro Único com os documentos.</div>
+              <div className="mt-1 text-muted-foreground">Dependentes e conta bancária não são alterados por aqui: trate na Pasta do Servidor com os documentos.</div>
             </div>
           )}
           <div className="flex flex-wrap gap-2">
@@ -290,7 +290,7 @@ function ReviewDialog({ item, canReview, onClose, onDone }: { item: Item; canRev
           <Button variant="outline" onClick={onClose} disabled={busy}>Fechar</Button>
           {item.status === "ENVIADO" && canReview && (mode === "view" ? <>
             <Button variant="outline" className="text-critical" onClick={() => setMode("back")}><Undo2 /> Devolver</Button>
-            <Button onClick={() => run("approve", {}, "Aprovado. Cadastro Único atualizado.")} disabled={busy}>{busy && <Loader2 className="animate-spin" />}<CheckCircle2 /> Aprovar e atualizar cadastro</Button>
+            <Button onClick={() => run("approve", {}, "Aprovado. Cadastro atualizado.")} disabled={busy}>{busy && <Loader2 className="animate-spin" />}<CheckCircle2 /> Aprovar e atualizar cadastro</Button>
           </> : <Button variant="destructive" disabled={busy || reason.trim().length < 10} onClick={() => run("give-back", { reason }, "Devolvido. O segurado foi avisado.")}>Devolver ao segurado</Button>)}
         </DialogFooter>
       </DialogContent>
@@ -328,7 +328,7 @@ function PresentialForm({ item, cad, onClose, onDone }: { item: Item; cad: Recad
       <DialogContent size="lg">
         <DialogHeader>
           <DialogTitle>Atendimento presencial — {item.person_name}</DialogTitle>
-          <DialogDescription>Confira cada dado com o segurado e os documentos originais. Ao salvar, o recadastramento é aprovado e o Cadastro Único é atualizado.</DialogDescription>
+          <DialogDescription>Confira cada dado com o segurado e os documentos originais. Ao salvar, o recadastramento é aprovado e o cadastro é atualizado.</DialogDescription>
         </DialogHeader>
         <DialogBody className="space-y-4">
           <RecadForm data={st.data} setData={st.setData} decl={st.decl} setDecl={st.setDecl} />

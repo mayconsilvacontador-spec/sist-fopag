@@ -301,13 +301,16 @@ class FinancialRecordViewSet(InstitutionScopedMixin, viewsets.GenericViewSet):
     GET  ativos/ficha-financeira/<pessoa>/?ano=&matricula=  ficha do ano
     GET  ativos/ficha-financeira/<pessoa>/excel/?ano=       ficha em Excel
     GET  ativos/ficha-financeira/<pessoa>/contribuicoes/    descontado × devido × repasse por competência
+    GET  ativos/ficha-financeira/<pessoa>/descobrir-base/   rubricas da base pelo cálculo inverso (sugestão)
+    POST ativos/ficha-financeira/<pessoa>/descobrir-base/   {codigos: [...]} → classifica como INCIDE_RPPS
     POST ativos/ficha-financeira/<pessoa>/historico/        bases → salários de contribuição
     """
 
     module_code = "ativos.ficha_financeira"
     action_permissions = {"modelo": "visualizar", "importar": "incluir", "rubricas": "visualizar",
                           "classificar": "incluir", "retrieve": "visualizar", "excel": "exportar",
-                          "contribuicoes": "visualizar", "historico": "incluir", "lancar": "incluir"}
+                          "contribuicoes": "visualizar", "historico": "incluir", "lancar": "incluir",
+                          "descobrir_base": "visualizar"}
 
     def get_queryset(self):
         from apps.people.models import Person
@@ -392,6 +395,20 @@ class FinancialRecordViewSet(InstitutionScopedMixin, viewsets.GenericViewSet):
 
         ano = request.query_params.get("ano")
         return Response(contributions(self.get_object(), int(ano) if ano else None))
+
+    @action(detail=True, methods=["get", "post"], url_path="descobrir-base")
+    def descobrir_base(self, request, pk=None):
+        from .ficha import infer_incidence, reclassify
+
+        person = self.get_object()
+        if request.method == "GET":
+            return Response(infer_incidence(person))
+        _need(request, "ativos.ficha_financeira:incluir", "classificar rubricas")
+        codes = [str(c).strip() for c in (request.data.get("codigos") or []) if str(c).strip()]
+        if not codes:
+            raise BusinessRuleError("Escolha ao menos uma rubrica.")
+        n = sum(reclassify(self.get_institution(), c, "INCIDE_RPPS", person) for c in codes)
+        return Response({"linhas": n, "rubricas": len(codes)})
 
     @action(detail=True, methods=["post"])
     def historico(self, request, pk=None):

@@ -253,6 +253,8 @@ class Benefit(InstitutionScopedModel):
     start_date = models.DateField("início do benefício")
     end_date = models.DateField("fim previsto / cessação", null=True, blank=True)
     amount = models.DecimalField("valor mensal", max_digits=15, decimal_places=2)
+    # benefício concedido e pago antes do SIST (processo digitalizado): a folha não gera retroativo até esta data
+    paid_until = models.DateField("pago pelo sistema anterior até", null=True, blank=True)
     percent = models.DecimalField("percentual da cota (pensão)", max_digits=7, decimal_places=3, null=True, blank=True)
     integralidade = models.BooleanField("integralidade", default=False)
     paridade = models.BooleanField("paridade", default=False)

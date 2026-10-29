@@ -75,7 +75,7 @@ class JobSerializer(serializers.ModelSerializer):
     class Meta:
         model = ReadingJob
         fields = ["id", "title", "engine", "status", "status_display", "person", "person_name", "created_at",
-                  "created_by_name", "applied_at", "andamento"]
+                  "created_by_name", "applied_at", "andamento", "concession"]
 
     def get_andamento(self, o):
         return services.progress(o)
@@ -88,7 +88,9 @@ class JobViewSet(InstitutionScopedMixin, mixins.ListModelMixin, mixins.RetrieveM
     parser_classes = [JSONParser, MultiPartParser, FormParser]
     action_permissions = {"create": "incluir", "ler": "incluir", "campo": "editar", "confirmar_alta": "editar",
                           "linha": "editar", "pagina": "visualizar",
-                          "aplicar": "editar", "descartar": "editar", "arquivo": "visualizar", "reler": "incluir"}
+                          "aplicar": "editar", "descartar": "editar", "arquivo": "visualizar", "reler": "incluir",
+                          "juntar": "editar", "arquivos": "incluir", "pessoa": "editar", "implantacao": "visualizar",
+                          "implantar": "editar"}
 
     def create(self, request, *args, **kwargs):
         job = services.create_job(self.get_institution(), request.data.get("titulo", ""),
@@ -192,3 +194,56 @@ class JobViewSet(InstitutionScopedMixin, mixins.ListModelMixin, mixins.RetrieveM
         f = self._file(file_id)
         services.retry_file(f)
         return Response(services.progress(f.job))
+
+    # ------------------------------------------------------------ processo digitalizado (implantacao.py)
+    @action(detail=True, methods=["post"])
+    def juntar(self, request, pk=None):
+        """{leituras: [ids]} — leva os arquivos das outras leituras para esta."""
+        from .implantacao import merge
+
+        ids = request.data.get("leituras") or []
+        sources = list(self.get_queryset().filter(pk__in=ids))
+        job = merge(self.get_object(), sources, request.user)
+        return Response(JobSerializer(job).data)
+
+    @action(detail=True, methods=["post"])
+    def arquivos(self, request, pk=None):
+        from .implantacao import add_files
+
+        job = add_files(self.get_object(), request.FILES.getlist("arquivos"))
+        return Response(JobSerializer(job).data)
+
+    @action(detail=True, methods=["post"])
+    def pessoa(self, request, pk=None):
+        """{pessoa: id | null} — escolhe a pessoa quando os documentos não trazem CPF."""
+        from apps.people.models import Person
+
+        from .implantacao import set_person
+
+        pid = request.data.get("pessoa")
+        person = Person.objects.filter(institution=self.get_institution(), pk=pid).first() if pid else None
+        if pid and person is None:
+            raise BusinessRuleError("Pessoa não encontrada.")
+        return Response(JobSerializer(set_person(self.get_object(), person)).data)
+
+    @action(detail=True, methods=["get"])
+    def implantacao(self, request, pk=None):
+        from .implantacao import prefill
+
+        job = self.get_object()
+        if not job.person_id:
+            raise BusinessRuleError("Aplique a leitura à Pasta do Servidor primeiro.")
+        return Response(prefill(job))
+
+    @action(detail=True, methods=["post"])
+    def implantar(self, request, pk=None):
+        """Implanta na folha a aposentadoria já concedida (exige permissão de implantação e a senha)."""
+        from apps.accounts.permissions import has_perm
+        from apps.concessao.workflow import confirm_password
+
+        from .implantacao import implant
+
+        if not has_perm(request, "concessao.implantacao:aprovar"):
+            raise PermissionDenied("Seu perfil não pode implantar benefícios na folha.")
+        confirm_password(request.user, request.data.get("password", ""))
+        return Response(implant(request, self.get_object(), request.data), status=201)

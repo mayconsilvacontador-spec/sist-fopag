@@ -140,7 +140,7 @@ DEFAULT_TEMPLATES = {
         "INDEFERIDO pela Presidência do {sigla}, pelos seguintes fundamentos:\n"
         "{motivo_indeferimento}\n"
         "Fica facultada a apresentação de recurso no prazo legal.\n"
-        "Barra Mansa, {hoje_extenso}.\n"
+        "{cidade}, {hoje_extenso}.\n"
         "Termo de ciência: ______________________________________   Data: ____/____/______"),
     (DocumentKind.PORTARIA_ANULACAO, ""): (
         "PORTARIA {sigla} Nº {numero_portaria}, DE {data_portaria_extenso}",
@@ -161,7 +161,7 @@ DEFAULT_TEMPLATES = {
         "Em razão da desistência, o processo é arquivado sem a concessão do benefício. A desistência não impede novo "
         "requerimento a qualquer tempo, que será analisado conforme as regras vigentes na data do novo pedido, "
         "resguardado o direito adquirido (Emenda à Lei Orgânica nº 28/2025, art. 5º).\n"
-        "Barra Mansa, {hoje_extenso}.\n"
+        "{cidade}, {hoje_extenso}.\n"
         "Requerente: ______________________________________   Data: ____/____/______"),
     (DocumentKind.RELATORIO_INSTRUCAO, ""): (
         "RELATÓRIO DE INSTRUÇÃO – {tipo_concessao_maiusculo}",
@@ -176,18 +176,18 @@ DEFAULT_TEMPLATES = {
         "Valor apurado: R$ {valor} ({valor_extenso}), {forma_proventos}, {paridade}.\n"
         "{cotas}\n"
         "Encaminhe-se à Procuradoria Jurídica para parecer.\n"
-        "Barra Mansa, {hoje_extenso}."),
+        "{cidade}, {hoje_extenso}."),
     (DocumentKind.PARECER_JURIDICO, ""): (
         "PARECER JURÍDICO – PROCESSO Nº {processo}",
         "Assunto: {tipo_concessao} de {nome}, CPF {cpf}.\n"
         "{parecer}\n"
-        "Barra Mansa, {hoje_extenso}."),
+        "{cidade}, {hoje_extenso}."),
     (DocumentKind.PARECER_CONTROLE, ""): (
         "ANÁLISE DE CONFORMIDADE – PROCESSO Nº {processo}",
         "Assunto: {tipo_concessao} de {nome}, CPF {cpf}. Valor: R$ {valor}.\n"
         "{conformidade}\n"
         "Encaminhe-se à Presidência.\n"
-        "Barra Mansa, {hoje_extenso}."),
+        "{cidade}, {hoje_extenso}."),
 }
 # Quem assina cada documento padrão (os demais: Presidente)
 DEFAULT_SIGNER = {DocumentKind.TERMO_DESISTENCIA: "Setor de Benefícios – {sigla}",
@@ -219,6 +219,7 @@ def context(c, *, number: str = "", act_date=None, reason: str = "") -> dict:
     benefit = c.revised_benefit
     ctx = {
         "instituicao": inst.name, "instituicao_maiusculo": inst.name.upper(), "sigla": inst.short_name,
+        "cidade": inst.city or "__________",
         "processo": c.process.code if c.process_id else "", "numero_portaria": number or "_____/______",
         "data_portaria": br_date(act_date), "data_portaria_extenso": long_date(act_date).upper() if act_date else
         "____ DE __________ DE ______", "hoje_extenso": long_date(timezone.localdate()),

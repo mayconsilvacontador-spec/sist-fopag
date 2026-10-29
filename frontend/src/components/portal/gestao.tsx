@@ -147,7 +147,7 @@ function CreateDialog({ onClose, onCreate }: { onClose: () => void; onCreate: (p
       <DialogContent size="md">
         <DialogHeader>
           <DialogTitle>Liberar acesso ao portal</DialogTitle>
-          <DialogDescription>Escolha a pessoa no Cadastro Único. O sistema gera uma senha provisória (se o acesso já existir, gera uma nova).</DialogDescription>
+          <DialogDescription>Escolha a pessoa (servidor, aposentado ou pensionista). O sistema gera uma senha provisória (se o acesso já existir, gera uma nova).</DialogDescription>
         </DialogHeader>
         <DialogBody><PersonPicker value={person} onChange={setPerson} /></DialogBody>
         <DialogFooter>
